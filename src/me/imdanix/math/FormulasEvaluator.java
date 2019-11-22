@@ -1,7 +1,7 @@
 package me.imdanix.math;
 
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /*
@@ -20,15 +20,15 @@ public class FormulasEvaluator {
 	private Map<String, Double> variables;
 
 	public FormulasEvaluator(String expression) {
+		this.variables = new HashMap<>();
 		this.expression = thirdImportance(new PointerHolder(Util.removeSpaces(expression.toLowerCase())));
 	}
 
-	public double eval() {
-		return eval(null);
+	public synchronized void setVariable(String variable, Double value) {
+		variables.put(variable, value);
 	}
 
-	public synchronized double eval(Map<String, Double> variables) {
-		this.variables = variables == null ? Collections.emptyMap() : variables;
+	public synchronized double eval() {
 		return expression.eval();
 	}
 
