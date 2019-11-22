@@ -17,7 +17,7 @@ public class FormulasEvaluator {
 	private static final Expression ZERO = () -> 0;
 	
 	private final Expression expression;
-	private Map<String, Double> variables;
+	private final Map<String, Double> variables;
 
 	public FormulasEvaluator(String expression) {
 		this.variables = new HashMap<>();
@@ -26,6 +26,10 @@ public class FormulasEvaluator {
 
 	public synchronized void setVariable(String variable, Double value) {
 		variables.put(variable, value);
+	}
+
+	public synchronized void setVariables(Map<String, Double> variables) {
+		this.variables.putAll(variables);
 	}
 
 	public synchronized double eval() {
