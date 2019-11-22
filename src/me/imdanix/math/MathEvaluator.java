@@ -44,8 +44,8 @@ public class MathEvaluator {
 	}
 
 	private double firstImportance() {
-		if(tryNext('-')) return -firstImportance();
-		tryNext('+');
+		if(tryNext('-')) return -firstImportance(); // "-5", "--5"..
+		if(tryNext('+')) return firstImportance(); // "+5", "++5"..
 		double x = 0;
 		int start = pointer;
 		if(tryNext('(')) {

@@ -76,11 +76,12 @@ public class FormulasEvaluator {
 	}
 
 	private Expression firstImportance(PointerHolder holder) {
-		if(holder.tryNext('-')) {
+		if(holder.tryNext('-')) { // "-5", "--5"..
 			Expression a = firstImportance(holder);
 			return () -> -a.eval();
 		}
-		holder.tryNext('+');
+		if(holder.tryNext('+')) // "+5", "++5"..
+			return firstImportance(holder);
 		Expression x = ZERO;
 		int start = holder.pointer;
 		if(holder.tryNext('(')) {
