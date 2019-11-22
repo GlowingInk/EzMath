@@ -25,7 +25,7 @@ public static void constant(String str, Double value) {
     if(MathBase.registerConstant(str, value))
         System.out.println("Constant " + str + " successfully registered with value " + value);
     else
-        System.out.println("Constant " + str + " is already registered with va;ue " + MathBase.getConstant(str));    
+        System.out.println("Constant " + str + " is already registered with value " + MathBase.getConstant(str));    
 }
 
 public static void function(String str, MathBase.Function func) {
