@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*
-   All the code is inspired by Boann's answer on stackoverflow.com/questions/3422673
+   All the code is inspired by Boann's answer on https://stackoverflow.com/questions/3422673
    You can use this code however you want to
 */
 
@@ -88,10 +88,12 @@ public class FormulasEvaluator {
 			x = thirdImportance(holder);
 			holder.tryNext(')');
 		} else if(MathBase.isNumberChar(holder.current())) {
+			holder.pointer++;
 			while(MathBase.isNumberChar(holder.current())) holder.pointer++;
 			double a = Util.getDouble(holder.substring(start, holder.pointer), 0);
 			x = () -> a;
 		} else if(MathBase.isWordChar(holder.current())) {
+			holder.pointer++;
 			while(MathBase.isWordChar(holder.current()) || MathBase.isNumberChar(holder.current())) holder.pointer++;
 			String str = holder.substring(start, holder.pointer);
 			if(holder.tryNext('(')) {

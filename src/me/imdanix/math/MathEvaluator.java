@@ -3,7 +3,7 @@ package me.imdanix.math;
 import java.util.Arrays;
 
 /*
-   All the code is inspired by Boann's answer on stackoverflow.com/questions/3422673
+   All the code is inspired by Boann's answer on https://stackoverflow.com/questions/3422673
    You can use this code however you want to
 */
 
@@ -52,9 +52,11 @@ public class MathEvaluator {
 			x = thirdImportance();
 			tryNext(')');
 		} else if(MathBase.isNumberChar(current())) {
+			pointer++;
 			while(MathBase.isNumberChar(current())) pointer++;
 			x = Util.getDouble(expression.substring(start, pointer), 0);
 		} else if(MathBase.isWordChar(current())) {
+			pointer++;
 			while(MathBase.isWordChar(current()) || MathBase.isNumberChar(current())) pointer++;
 			String str = expression.substring(start, pointer);
 			if(tryNext('(')) {
