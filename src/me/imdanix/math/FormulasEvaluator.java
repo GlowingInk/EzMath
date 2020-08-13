@@ -2,6 +2,7 @@ package me.imdanix.math;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /*
@@ -21,7 +22,7 @@ public class FormulasEvaluator {
 
 	public FormulasEvaluator(String expression) {
 		this.variables = new HashMap<>();
-		this.expression = thirdImportance(new PointerHolder(Util.removeSpaces(expression.toLowerCase())));
+		this.expression = thirdImportance(new PointerHolder(Util.removeSpaces(expression).toLowerCase(Locale.ENGLISH)));
 	}
 
 	public synchronized void setVariable(String variable, Double value) {

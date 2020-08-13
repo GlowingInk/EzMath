@@ -1,6 +1,7 @@
 package me.imdanix.math;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 /*
    All the code is inspired by Boann's answer on https://stackoverflow.com/questions/3422673
@@ -16,7 +17,7 @@ public class MathEvaluator {
 	private final String expression;
 
 	private MathEvaluator(String expression) {
-		this.expression = Util.removeSpaces(expression.toLowerCase());
+		this.expression = Util.removeSpaces(expression).toLowerCase(Locale.ENGLISH);
 	}
 
 	private double eval() {
