@@ -82,8 +82,7 @@ public class FormulasEvaluator {
             Expression a = firstImportance(holder);
             return () -> -a.eval();
         }
-        if (holder.tryNext('+')) // "+5", "++5"..
-            return firstImportance(holder);
+        while (holder.tryNext('+')) /* just skip */; // "+5", "++5"..
         Expression x = ZERO;
         int start = holder.pointer;
         if (holder.tryNext('(')) {
@@ -113,11 +112,11 @@ public class FormulasEvaluator {
                     case 0: x = () -> function.eval(a.eval()); break;
                     case 1: x = () -> function.eval(a.eval(), finArgs[0].eval()); break;
                     default:
-                        double[] argsD = new double[finArgs.length];
+                        double[] numArgs = new double[finArgs.length];
                         x = () -> {
                             for (int i = 0; i < finArgs.length; i++)
-                                argsD[i] = finArgs[i].eval();
-                            return function.eval(a.eval(), argsD);
+                                numArgs[i] = finArgs[i].eval();
+                            return function.eval(a.eval(), numArgs);
                         };
                 }
                 holder.tryNext(')');
