@@ -74,7 +74,13 @@ public class MathEvaluator {
                     args = Arrays.copyOfRange(args, 0, args.length + 1);
                     args[args.length - 1] = thirdImportance();
                 }
-                x = function == null ? 0 : function.eval(x, args);
+                if (function == null) {
+                    x = 0;
+                } else switch (args.length) {
+                    case 0: x = function.eval(x); break;
+                    case 1: x = function.eval(x, args[0]); break;
+                    default: x = function.eval(x, args);
+                }
                 tryNext(')');
             } else {
                 x = math.getConstant(str);

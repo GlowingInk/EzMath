@@ -63,7 +63,7 @@ public class MathBase {
 
     private static boolean isAllowedName(String str) {
         for (char c : str.toCharArray())
-            if (!(isNumberChar(c) && isWordChar(c))) return false;
+            if (!(isNumberChar(c) || isWordChar(c))) return false;
         return isWordChar(str.charAt(0));
     }
 

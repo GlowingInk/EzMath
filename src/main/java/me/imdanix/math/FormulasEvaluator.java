@@ -105,28 +105,26 @@ public class FormulasEvaluator {
                     args = Arrays.copyOfRange(args, 0, args.length + 1);
                     args[args.length - 1] = thirdImportance(holder);
                 }
-                if (args.length > 0) {
-                    Expression[] args2 = args;
-                    double[] argsD = new double[args2.length];
-                    x = () -> {
-                        MathBase.Function function = math.getFunction(str);
-                        for (int i = 0; i < args2.length; i++)
-                            argsD[i] = args2[i].eval();
-                        return function == null ? 0 : function.eval(a.eval(), argsD);
-                    };
-                } else {
-                    x = () -> {
-                        MathBase.Function function = math.getFunction(str);
-                        return function == null ? 0 : function.eval(a.eval());
-                    };
+                Expression[] finArgs = args;
+                MathBase.Function function = math.getFunction(str);
+                if (function == null) {
+                    x = ZERO;
+                } else switch (args.length) {
+                    case 0: x = () -> function.eval(a.eval()); break;
+                    case 1: x = () -> function.eval(a.eval(), finArgs[0].eval()); break;
+                    default:
+                        double[] argsD = new double[finArgs.length];
+                        x = () -> {
+                            for (int i = 0; i < finArgs.length; i++)
+                                argsD[i] = finArgs[i].eval();
+                            return function.eval(a.eval(), argsD);
+                        };
                 }
                 holder.tryNext(')');
-            } else {
-                x = () -> {
-                    Double var = variables.get(str);
-                    return var == null ? math.getConstant(str) : var;
-                };
-            }
+            } else x = () -> {
+                Double var = variables.get(str);
+                return var == null ? math.getConstant(str) : var;
+            };
         }
 
         if (holder.tryNext('^')) {
