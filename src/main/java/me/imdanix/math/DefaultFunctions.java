@@ -261,3 +261,4 @@ enum DefaultFunctions implements MathBase.Function {
         }
     }
 }
+// ТУТ БЫЛ NOISE
