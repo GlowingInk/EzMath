@@ -3,7 +3,7 @@ package me.imdanix.math;
 import org.testng.annotations.DataProvider;
 
 public abstract class BaseMathTest {
-    protected static final MathDictionary math = new MathDictionary();
+    protected static final MathDictionary math = MathDictionary.INSTANCE;
 
     @DataProvider
     public static Object[][] expressions() {

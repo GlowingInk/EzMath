@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class FormulaEvaluator {
     private static final Term ZERO = () -> 0;
+    private static final Double ZERO_VALUE = 0d;
 
     private final MathDictionary math;
     private final Term term;
@@ -127,10 +128,15 @@ public class FormulaEvaluator {
                     }
                 }
                 holder.check(')');
-            } else x = () -> {
-                Double var = variables.get(str);
-                return var == null ? math.getConstant(str) : var;
-            };
+            } else {
+                Double cons = math.getConstant(str);
+                if (cons == null) {
+                    x = () -> variables.getOrDefault(str, ZERO_VALUE);
+                } else {
+                    double consValue = cons;
+                    x = () -> consValue;
+                }
+            }
         }
 
         if (holder.check('^')) {

@@ -1,5 +1,6 @@
 package me.imdanix.math;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -8,31 +9,36 @@ import java.util.regex.Pattern;
 
 public class MathDictionary {
     private static final Pattern FLOAT = Pattern.compile("-?\\d+(\\.\\d+)?");
-    private static final Pattern NAME_PATTERN = Pattern.compile("[a-z][a-z\\d_]+");
 
-    private static final Map<String, Function> BASIC_FUNCTIONS;
-    private static final Map<String, Double> BASIC_CONSTANTS;
+    public static final Pattern NAME_PATTERN = Pattern.compile("[a-z][a-z\\d_]+");
+    public static final Map<String, Function> BASIC_FUNCTIONS;
+    public static final Map<String, Double> BASIC_CONSTANTS;
     static {
-        BASIC_FUNCTIONS = new HashMap<>(DefaultFunctions.values().length);
+        Map<String, Function> basicFunctions = new HashMap<>(DefaultFunctions.values().length);
         for (DefaultFunctions func : DefaultFunctions.values())
-            BASIC_FUNCTIONS.put(func.name().toLowerCase(Locale.ROOT), func);
-        BASIC_CONSTANTS = new HashMap<>(10);
-        BASIC_CONSTANTS.put("e", Math.E);
-        BASIC_CONSTANTS.put("ln2", 0.693147180559945);
-        BASIC_CONSTANTS.put("ln10", 2.302585092994046);
-        BASIC_CONSTANTS.put("log2e", 1.442695040888963);
-        BASIC_CONSTANTS.put("euler", 0.577215664901533);
-        BASIC_CONSTANTS.put("log10e", 0.434294481903252);
-        BASIC_CONSTANTS.put("phi", 1.618033988749895);
-        BASIC_CONSTANTS.put("pi", Math.PI);
-        BASIC_CONSTANTS.put("max_value", Double.MAX_VALUE);
-        BASIC_CONSTANTS.put("min_value", Double.MIN_VALUE);
+            basicFunctions.put(func.name().toLowerCase(Locale.ROOT), func);
+        Map<String, Double> basicConstants = new HashMap<>(10);
+        basicConstants.put("e", Math.E);
+        basicConstants.put("ln2", 0.693147180559945);
+        basicConstants.put("ln10", 2.302585092994046);
+        basicConstants.put("log2e", 1.442695040888963);
+        basicConstants.put("euler", 0.577215664901533);
+        basicConstants.put("log10e", 0.434294481903252);
+        basicConstants.put("phi", 1.618033988749895);
+        basicConstants.put("pi", Math.PI);
+        basicConstants.put("max_value", Double.MAX_VALUE);
+        basicConstants.put("min_value", Double.MIN_VALUE);
+
+        BASIC_FUNCTIONS = Collections.unmodifiableMap(basicFunctions);
+        BASIC_CONSTANTS = Collections.unmodifiableMap(basicConstants);
     }
+
+    public static MathDictionary INSTANCE = new MathDictionary();
 
     private final Map<String, Function> functions;
     private final Map<String, Double> constants;
 
-    public MathDictionary() {
+    private MathDictionary() {
         this.functions = new HashMap<>(BASIC_FUNCTIONS);
         this.constants = new HashMap<>(BASIC_CONSTANTS);
     }
@@ -45,7 +51,7 @@ public class MathDictionary {
 
     private static <T> void tryRegister(String what, Map<String, T> out, Map<String, T> in) {
         for (Map.Entry<String, T> entry : out.entrySet()) {
-            String name = entry.getKey().toLowerCase(Locale.ROOT);
+            String name = entry.getKey();
             Matcher matcher = NAME_PATTERN.matcher(name);
             if (!matcher.matches()) {
                 throw new IllegalArgumentException(what + " name '" + name + "' doesn't " +
@@ -62,9 +68,13 @@ public class MathDictionary {
         return functions.get(name);
     }
 
-    public double getConstant(String name) {
+    public double getConstant(String name, double def) {
         Double value = constants.get(name);
-        return value == null ? 0 : value;
+        return value == null ? def : value;
+    }
+
+    public Double getConstant(String name) {
+        return constants.get(name);
     }
 
     public static boolean isNumberChar(char c) {

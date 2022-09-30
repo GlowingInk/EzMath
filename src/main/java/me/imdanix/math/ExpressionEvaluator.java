@@ -80,7 +80,7 @@ public class ExpressionEvaluator {
                 }
                 check(')');
             } else {
-                x = math.getConstant(str);
+                x = math.getConstant(str, 0);
             }
         }
 

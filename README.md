@@ -6,12 +6,10 @@ Evaluators code is based off Boann's answer on https://stackoverflow.com/a/26227
 ## As dependency
 Add jitpack repository
 ```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
 ```
 Add dependency
 ```xml
