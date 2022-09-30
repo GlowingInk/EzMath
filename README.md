@@ -15,9 +15,9 @@ Add jitpack repository
 ```
 Add dependency
 ```xml
-	<dependency>
-	    <groupId>com.github.imDaniX</groupId>
-	    <artifactId>EzMath</artifactId>
-	    <version>v3.0</version>
-	</dependency>
+<dependency>
+    <groupId>com.github.imDaniX</groupId>
+    <artifactId>EzMath</artifactId>
+    <version>v3.0</version>
+</dependency>
 ```
