@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MathDictionary {
-    private static final Pattern FLOAT = Pattern.compile("-?\\d+(\\.\\d+)?");
+    private static final Pattern FLOAT = Pattern.compile("\\d+(\\.\\d+)?");
 
     public static final Pattern NAME_PATTERN = Pattern.compile("[a-z][a-z\\d_]+");
     public static final Map<String, Function> BASIC_FUNCTIONS;
@@ -202,6 +202,16 @@ public class MathDictionary {
         @Override
         public double eval(double a) {
             return internal.eval(a);
+        }
+
+        @Override
+        public double eval(double a, double b) {
+            return internal.eval(a, b);
+        }
+
+        @Override
+        public double eval(double a, double... num) {
+            return internal.eval(a, num);
         }
     }
 }

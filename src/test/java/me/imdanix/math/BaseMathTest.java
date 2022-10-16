@@ -2,6 +2,8 @@ package me.imdanix.math;
 
 import org.testng.annotations.DataProvider;
 
+import static java.lang.Math.*;
+
 public abstract class BaseMathTest {
     protected static final MathDictionary math = MathDictionary.INSTANCE;
 
@@ -9,11 +11,15 @@ public abstract class BaseMathTest {
     public static Object[][] expressions() {
         return new Object[][] {
                 {"5+5", 5+5},
+                {"10-8", 2},
+                {"10--8", 18},
                 {"123*456/(7+8-9)", 123*456d/(7+8-9)},
-                {"e", Math.E},
-                {"(pi+e)/13", (Math.PI + Math.E) / 13D},
-                {"cos(234.66+5)", Math.cos(234.66+5)},
-                {"hypot(12,sin(34))/56", Math.hypot(12, Math.sin(34)) / 56D}
+                {"e", E},
+                {"(pi+e)/13", (PI + E) / 13D},
+                {"max(10,e,20)", max(10, max(E, 20))},
+                {"sin(sqrt(5))^2", pow(sin(sqrt(5)), 2)},
+                {"cos(234.66+5)", cos(234.66+5)},
+                {"hypot(12,sin(34))/56", hypot(12, sin(34)) / 56D}
         };
     }
 }

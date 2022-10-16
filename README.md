@@ -1,7 +1,7 @@
 # EzMath
 
 Simple math evaluator. Supports constants, functions, variables.
-Evaluators code is based off Boann's answer on https://stackoverflow.com/a/26227947/9819521
+Evaluators code is based off Boann's answer on [StackOverflow](https://stackoverflow.com/a/26227947/9819521).
 
 ## As dependency
 Add jitpack repository

@@ -1,51 +1,27 @@
 package me.imdanix.math;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Pretty much the same as {@link ExpressionEvaluator}, but better performance for expressions that used more than one time
  * The main difference is that custom variables can be used
  */
 public class FormulaEvaluator {
-    private static final Term ZERO = () -> 0;
+    private static final Term ZERO = (vars) -> 0;
     private static final Double ZERO_VALUE = 0d;
 
     private final MathDictionary math;
     private final Term term;
 
-    private boolean initRequired;
-    private Map<String, Double> variables;
-
     public FormulaEvaluator(String expression, MathDictionary math) {
         this.math = math;
-        this.initRequired = true;
-        this.variables = Collections.emptyMap();
         this.term = thirdImportance(new PointerHolder(expression.replace(" ", "").toLowerCase(Locale.ENGLISH)));
     }
 
-    public void setVariable(String variable, Double value) {
-        initVariables();
-        this.variables.put(variable, value);
-    }
-
-    public void setVariables(Map<String, Double> variables) {
-        initVariables();
-        this.variables.putAll(variables);
-    }
-
-    private void initVariables() {
-        if (initRequired) {
-            initRequired = false;
-            variables = new ConcurrentHashMap<>();
-        }
-    }
-
-    public double eval() {
-        return term.eval();
+    public double eval(Map<String, Double> variables) {
+        return term.eval(variables);
     }
 
     private Term thirdImportance(PointerHolder holder) {
@@ -54,11 +30,11 @@ public class FormulaEvaluator {
             if (holder.check('+')) {
                 Term a = x;
                 Term b = secondImportance(holder);
-                x = () -> a.eval() + b.eval();
+                x = (vars) -> a.eval(vars) + b.eval(vars);
             } else if (holder.check('-')) {
                 Term a = x;
                 Term b = secondImportance(holder);
-                x = () -> a.eval() - b.eval();
+                x = (vars) -> a.eval(vars) - b.eval(vars);
             } else {
                 return x;
             }
@@ -71,15 +47,15 @@ public class FormulaEvaluator {
             if (holder.check('*')) {
                 Term a = x;
                 Term b = firstImportance(holder);
-                x = () -> a.eval() * b.eval();
+                x = (vars) -> a.eval(vars) * b.eval(vars);
             } else if (holder.check('/')) {
                 Term a = x;
                 Term b = firstImportance(holder);
-                x = () -> a.eval() / b.eval();
+                x = (vars) -> a.eval(vars) / b.eval(vars);
             } else if (holder.check('%')) {
                 Term a = x;
                 Term b = firstImportance(holder);
-                x = () -> a.eval() % b.eval();
+                x = (vars) -> a.eval(vars) % b.eval(vars);
             } else {
                 return x;
             }
@@ -89,8 +65,9 @@ public class FormulaEvaluator {
     private Term firstImportance(PointerHolder holder) {
         if (holder.check('-')) { // "-5", "--5"..
             Term a = firstImportance(holder);
-            return () -> -a.eval();
+            return (vars) -> -a.eval(vars);
         }
+        //noinspection StatementWithEmptyBody
         while (holder.check('+')) /* just skip */; // "+5", "++5"..
         Term x = ZERO;
         int start = holder.pointer;
@@ -101,7 +78,7 @@ public class FormulaEvaluator {
             holder.pointer++;
             while (MathDictionary.isNumberChar(holder.current())) holder.pointer++;
             double a = MathDictionary.getDouble(holder.substring(start, holder.pointer), 0);
-            x = () -> a;
+            x = (vars) -> a;
         } else if (MathDictionary.isWordChar(holder.current())) {
             holder.pointer++;
             while (MathDictionary.isWordChar(holder.current()) || MathDictionary.isNumberChar(holder.current())) holder.pointer++;
@@ -115,26 +92,24 @@ public class FormulaEvaluator {
                 }
                 Term[] finArgs = args;
                 MathDictionary.Function function = math.getFunction(str);
-                if (function != null) switch (args.length) {
-                    case 0 -> x = () -> function.eval(a.eval());
-                    case 1 -> x = () -> function.eval(a.eval(), finArgs[0].eval());
-                    default -> {
+                if (function != null) x = switch (args.length) {
+                    case 0 -> (vars) -> function.eval(a.eval(vars));
+                    case 1 -> (vars) -> function.eval(a.eval(vars), finArgs[0].eval(vars));
+                    default -> (vars) -> {
                         double[] numArgs = new double[finArgs.length];
-                        x = () -> {
-                            for (int i = 0; i < finArgs.length; i++)
-                                numArgs[i] = finArgs[i].eval();
-                            return function.eval(a.eval(), numArgs);
-                        };
-                    }
-                }
+                        for (int i = 0; i < finArgs.length; i++)
+                            numArgs[i] = finArgs[i].eval(vars);
+                        return function.eval(a.eval(vars), numArgs);
+                    };
+                };
                 holder.check(')');
             } else {
                 Double cons = math.getConstant(str);
                 if (cons == null) {
-                    x = () -> variables.getOrDefault(str, ZERO_VALUE);
+                    x = (vars) -> vars.getOrDefault(str, ZERO_VALUE);
                 } else {
                     double consValue = cons;
-                    x = () -> consValue;
+                    x = (vars) -> consValue;
                 }
             }
         }
@@ -142,19 +117,18 @@ public class FormulaEvaluator {
         if (holder.check('^')) {
             Term a = x;
             Term b = firstImportance(holder);
-            x = () -> Math.pow(a.eval(), b.eval());
+            x = (vars) -> Math.pow(a.eval(vars), b.eval(vars));
         }
         return x;
     }
 
     @FunctionalInterface
     private interface Term {
-        double eval();
+        double eval(Map<String, Double> vars);
     }
 
     /**
-     * Used in parse process to unload origin and pointer itself after ending of parse
-     * Because of this class everything looks a bit more sh!tty... but still readable
+     * Used in parse process to unload origin after ending of parse
      */
     private static final class PointerHolder {
         final String origin;

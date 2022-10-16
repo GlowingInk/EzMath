@@ -47,6 +47,7 @@ public class ExpressionEvaluator {
 
     private double firstImportance() {
         if (check('-')) return -firstImportance(); // "-5", "--5"..
+        //noinspection StatementWithEmptyBody
         while (check('+')) /* just skip */; // "+5", "++5"..
         double x = 0;
         int start = pointer;
