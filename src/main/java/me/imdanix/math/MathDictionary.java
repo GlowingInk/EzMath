@@ -45,11 +45,11 @@ public class MathDictionary {
 
     public MathDictionary(Map<String, Function> functions, Map<String, Double> constants) {
         this();
-        tryRegister("Function", functions, this.functions);
-        tryRegister("Constant", constants, this.constants);
+        tryRegister("Function", this.functions, functions);
+        tryRegister("Constant", this.constants, constants);
     }
 
-    private static <T> void tryRegister(String what, Map<String, T> out, Map<String, T> in) {
+    private static <T> void tryRegister(String what, Map<String, T> in, Map<String, T> out) {
         for (Map.Entry<String, T> entry : out.entrySet()) {
             String name = entry.getKey();
             Matcher matcher = NAME_PATTERN.matcher(name);

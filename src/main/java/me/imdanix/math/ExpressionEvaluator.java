@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Locale;
 
 /**
- * Math evaluator for "calc'n'go". Supports functions, constants
- * Actually can be fully replaced by {@link FormulaEvaluator}, but this one doesn't create additional objects
+ * Best performance for one-time calculations over {@link FormulaEvaluator}.
+ * Unlike {@link FormulaEvaluator}, doesn't create additional memory garbage.
  */
 public class ExpressionEvaluator {
     private final String expression;

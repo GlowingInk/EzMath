@@ -5,8 +5,8 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Pretty much the same as {@link ExpressionEvaluator}, but better performance for expressions that used more than one time
- * The main difference is that custom variables can be used
+ * Best performance for repeating calculations over {@link ExpressionEvaluator}.
+ * Unlike {@link ExpressionEvaluator}, accepts custom variables after expression compiling.
  */
 public class FormulaEvaluator {
     private static final Term ZERO = (vars) -> 0;
