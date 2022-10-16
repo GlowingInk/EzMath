@@ -17,7 +17,7 @@ public class FormulaEvaluator {
 
     public FormulaEvaluator(String expression, MathDictionary math) {
         this.math = math;
-        this.term = thirdImportance(new PointerHolder(expression.replace(" ", "").toLowerCase(Locale.ENGLISH)));
+        this.term = thirdImportance(new PointerHolder(expression.replace(" ", "").toLowerCase(Locale.ROOT)));
     }
 
     public double eval(Map<String, Double> variables) {

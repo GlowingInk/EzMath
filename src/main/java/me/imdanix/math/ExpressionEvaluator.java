@@ -13,7 +13,7 @@ public class ExpressionEvaluator {
     private int pointer;
 
     private ExpressionEvaluator(String expression, MathDictionary math) {
-        this.expression = expression.replace(" ", "").toLowerCase(Locale.ENGLISH);
+        this.expression = expression.replace(" ", "").toLowerCase(Locale.ROOT);
         this.math = math;
     }
 
