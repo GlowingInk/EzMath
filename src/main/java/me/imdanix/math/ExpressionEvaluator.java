@@ -3,6 +3,8 @@ package me.imdanix.math;
 import java.util.Arrays;
 import java.util.Locale;
 
+import static me.imdanix.math.MathDictionary.*;
+
 /**
  * Best performance for one-time calculations over {@link FormulaEvaluator}.
  * Unlike {@link FormulaEvaluator}, doesn't create additional memory garbage.
@@ -58,13 +60,13 @@ public class ExpressionEvaluator {
         if (check('(')) {
             x = thirdImportance();
             check(')');
-        } else if (MathDictionary.isNumberChar(current())) {
+        } else if (isDigitChar(current())) {
             pointer++;
-            while (MathDictionary.isNumberChar(current())) pointer++;
-            x = MathDictionary.getDouble(expression.substring(start, pointer), 0);
-        } else if (MathDictionary.isWordChar(current())) {
+            while (isNumberChar(current())) pointer++;
+            x = MathDictionary.asDouble(expression.substring(start, pointer), 0);
+        } else if (isWordChar(current())) {
             pointer++;
-            while (MathDictionary.isWordChar(current()) || MathDictionary.isNumberChar(current())) pointer++;
+            while (isWordChar(current()) || isDigitChar(current())) pointer++;
             String str = expression.substring(start, pointer);
             if (check('(')) {
                 MathDictionary.Function function = math.getFunction(str);

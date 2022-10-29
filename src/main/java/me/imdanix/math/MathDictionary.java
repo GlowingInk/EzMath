@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MathDictionary {
-    private static final Pattern FLOAT = Pattern.compile("\\d+(\\.\\d+)?");
+    private static final Pattern FLOAT = Pattern.compile("\\d+(\\.\\d+(e-?\\d+)?)?");
 
     public static final Pattern NAME_PATTERN = Pattern.compile("[a-z][a-z\\d_]+");
     public static final Map<String, Function> BASIC_FUNCTIONS;
@@ -77,15 +77,19 @@ public class MathDictionary {
         return constants.get(name);
     }
 
+    public static boolean isDigitChar(char c) {
+        return c >= '0' && c <= '9';
+    }
+
     public static boolean isNumberChar(char c) {
-        return (c >= '0' && c <= '9') || c == '.';
+        return isDigitChar(c) || c == '.' || c == 'e';
     }
 
     public static boolean isWordChar(char c) {
         return (c >= 'a' && c <= 'z') || c == '_';
     }
 
-    public static double getDouble(String str, double def) {
+    public static double asDouble(String str, double def) {
         if (!FLOAT.matcher(str).matches()) return def;
         return Double.parseDouble(str);
     }

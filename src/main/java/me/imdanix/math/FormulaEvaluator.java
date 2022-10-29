@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 
+import static me.imdanix.math.MathDictionary.*;
+
 /**
  * Best performance for repeating calculations over {@link ExpressionEvaluator}.
  * Unlike {@link ExpressionEvaluator}, accepts custom variables after expression compiling.
@@ -78,14 +80,14 @@ public class FormulaEvaluator {
         if (holder.check('(')) {
             x = thirdImportance(holder);
             holder.check(')');
-        } else if (MathDictionary.isNumberChar(holder.current())) {
+        } else if (isDigitChar(holder.current())) {
             holder.pointer++;
-            while (MathDictionary.isNumberChar(holder.current())) holder.pointer++;
-            double a = MathDictionary.getDouble(holder.substring(start, holder.pointer), 0);
+            while (isNumberChar(holder.current())) holder.pointer++;
+            double a = asDouble(holder.substring(start, holder.pointer), 0);
             x = (vars) -> a;
-        } else if (MathDictionary.isWordChar(holder.current())) {
+        } else if (isWordChar(holder.current())) {
             holder.pointer++;
-            while (MathDictionary.isWordChar(holder.current()) || MathDictionary.isNumberChar(holder.current())) holder.pointer++;
+            while (isWordChar(holder.current()) || isDigitChar(holder.current())) holder.pointer++;
             String str = holder.substring(start, holder.pointer);
             if (holder.check('(')) {
                 Term a = thirdImportance(holder);
