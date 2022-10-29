@@ -16,6 +16,6 @@ Add dependency
 <dependency>
     <groupId>com.github.imDaniX</groupId>
     <artifactId>EzMath</artifactId>
-    <version>v3.2</version>
+    <version>v3.3</version>
 </dependency>
 ```

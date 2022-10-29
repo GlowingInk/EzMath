@@ -6,11 +6,11 @@
 
     <groupId>me.imdanix.math</groupId>
     <artifactId>EzMath</artifactId>
-    <version>3.2</version>
+    <version>3.3</version>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>17</java.version>
+        <encoding>UTF-8</encoding>
     </properties>
 
     <dependencies>
@@ -30,8 +30,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${encoding}</encoding>
                 </configuration>
             </plugin>
             <plugin>

@@ -15,6 +15,10 @@ public class FormulaEvaluator {
     private final MathDictionary math;
     private final Term term;
 
+    public FormulaEvaluator(String expression) {
+        this(expression, MathDictionary.INSTANCE);
+    }
+
     public FormulaEvaluator(String expression, MathDictionary math) {
         this.math = math;
         this.term = thirdImportance(new PointerHolder(expression.replace(" ", "").toLowerCase(Locale.ROOT)));

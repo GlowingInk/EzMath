@@ -17,6 +17,10 @@ public class ExpressionEvaluator {
         this.math = math;
     }
 
+    public static double eval(String expression) {
+        return eval(expression, MathDictionary.INSTANCE);
+    }
+
     public static double eval(String expression, MathDictionary math) {
         return new ExpressionEvaluator(expression, math).eval();
     }

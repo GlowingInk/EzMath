@@ -5,8 +5,6 @@ import org.testng.annotations.DataProvider;
 import static java.lang.Math.*;
 
 public abstract class BaseMathTest {
-    protected static final MathDictionary math = MathDictionary.INSTANCE;
-
     @DataProvider
     public static Object[][] expressions() {
         return new Object[][] {
