@@ -13,6 +13,7 @@ public abstract class BaseMathTest {
                 {"10--8", 18},
                 {"123*456/(7+8-9)", 123*456d/(7+8-9)},
                 {"e", E},
+                {"-infinity", Double.NEGATIVE_INFINITY},
                 {"(pi+e)/13", (PI + E) / 13D},
                 {"max(10,e,20)", max(10, max(E, 20))},
                 {"sin(sqrt(5))^2", pow(sin(sqrt(5)), 2)},

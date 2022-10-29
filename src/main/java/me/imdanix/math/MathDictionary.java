@@ -28,6 +28,7 @@ public class MathDictionary {
         basicConstants.put("pi", Math.PI);
         basicConstants.put("max_value", Double.MAX_VALUE);
         basicConstants.put("min_value", Double.MIN_VALUE);
+        basicConstants.put("infinity", Double.POSITIVE_INFINITY);
 
         BASIC_FUNCTIONS = Collections.unmodifiableMap(basicFunctions);
         BASIC_CONSTANTS = Collections.unmodifiableMap(basicConstants);
