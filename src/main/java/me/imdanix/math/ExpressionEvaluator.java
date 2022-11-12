@@ -3,10 +3,11 @@ package me.imdanix.math;
 import java.util.Arrays;
 import java.util.Locale;
 
-import static me.imdanix.math.MathDictionary.*;
+import static me.imdanix.math.MathDictionary.isDigitChar;
+import static me.imdanix.math.MathDictionary.isWordChar;
 
 /**
- * Best performance for one-time calculations over {@link FormulaEvaluator}.
+ * Better performance for one-time calculations over {@link FormulaEvaluator}.
  * Unlike {@link FormulaEvaluator}, doesn't create additional memory garbage.
  */
 public class ExpressionEvaluator {
@@ -35,8 +36,8 @@ public class ExpressionEvaluator {
     private double thirdImportance() {
         double x = secondImportance();
         while (true) {
-            if (check('+')) x += secondImportance();
-            else if (check('-')) x -= secondImportance();
+            if (progress('+')) x += secondImportance();
+            else if (progress('-')) x -= secondImportance();
             else return x;
         }
     }
@@ -44,35 +45,42 @@ public class ExpressionEvaluator {
     private double secondImportance() {
         double x = firstImportance();
         while (true) {
-            if (check('*')) x *= firstImportance();
-            else if (check('/')) x /= firstImportance();
-            else if (check('%')) x %= firstImportance();
+            if (progress('*')) x *= firstImportance();
+            else if (progress('/')) x /= firstImportance();
+            else if (progress('%')) x %= firstImportance();
             else return x;
         }
     }
 
     private double firstImportance() {
-        if (check('-')) return -firstImportance(); // "-5", "--5"..
+        if (progress('-')) return -firstImportance(); // "-5", "--5"..
         //noinspection StatementWithEmptyBody
-        while (check('+')) /* just skip */; // "+5", "++5"..
+        while (progress('+')) /* just skip */; // "+5", "++5"..
         double x = 0;
         int start = pointer;
-        if (check('(')) {
+        if (progress('(')) {
             x = thirdImportance();
-            check(')');
+            progress(')');
         } else if (isDigitChar(current())) {
             pointer++;
-            while (isNumberChar(current())) pointer++;
+            while (isDigitChar(current())) pointer++;
+            if (progress('.')) {
+                while (isDigitChar(current())) pointer++;
+                if (progress('e')) {
+                    progress('-');
+                    while (isDigitChar(current())) pointer++;
+                }
+            }
             x = MathDictionary.asDouble(expression.substring(start, pointer), 0);
         } else if (isWordChar(current())) {
             pointer++;
             while (isWordChar(current()) || isDigitChar(current())) pointer++;
             String str = expression.substring(start, pointer);
-            if (check('(')) {
+            if (progress('(')) {
                 MathDictionary.Function function = math.getFunction(str);
                 x = thirdImportance();
                 double[] args = {};
-                while (check(',')) {
+                while (progress(',')) {
                     args = Arrays.copyOfRange(args, 0, args.length + 1);
                     args[args.length - 1] = thirdImportance();
                 }
@@ -80,18 +88,18 @@ public class ExpressionEvaluator {
                     x = 0;
                 } else {
                     x = switch (args.length) {
-                        case 0 -> function.eval(x);
-                        case 1 -> function.eval(x, args[0]);
-                        default -> function.eval(x, args);
+                        case 0 -> function.accept(x);
+                        case 1 -> function.accept(x, args[0]);
+                        default -> function.accept(x, args);
                     };
                 }
-                check(')');
+                progress(')');
             } else {
                 x = math.getConstant(str, 0);
             }
         }
 
-        if (check('^')) x = Math.pow(x, firstImportance());
+        if (progress('^')) x = Math.pow(x, firstImportance());
         return x;
     }
 
@@ -99,7 +107,7 @@ public class ExpressionEvaluator {
         return expression.length() > pointer ? expression.charAt(pointer) : ' ';
     }
 
-    private boolean check(char c) {
+    private boolean progress(char c) {
         if (current() == c) {
             pointer++;
             return true;

@@ -7,6 +7,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The dictionary for basic math constants and functions.
+ * <p>
+ * Intended to be immutable after its creation, yet if you're from parallel universe with other math constants than
+ * provided initially, the class is still open for extending.
+ */
 public class MathDictionary {
     private static final Pattern FLOAT = Pattern.compile("\\d+(\\.\\d+(e-?\\d+)?)?");
 
@@ -17,18 +23,19 @@ public class MathDictionary {
         Map<String, Function> basicFunctions = new HashMap<>(DefaultFunctions.values().length);
         for (DefaultFunctions func : DefaultFunctions.values())
             basicFunctions.put(func.name().toLowerCase(Locale.ROOT), func);
-        Map<String, Double> basicConstants = new HashMap<>(10);
+        Map<String, Double> basicConstants = new HashMap<>(12);
         basicConstants.put("e", Math.E);
+        basicConstants.put("pi", Math.PI);
+        basicConstants.put("max_value", Double.MAX_VALUE);
+        basicConstants.put("min_value", Double.MIN_VALUE);
+        basicConstants.put("infinity", Double.POSITIVE_INFINITY);
+        basicConstants.put("nan", Double.NaN);
         basicConstants.put("ln2", 0.693147180559945);
         basicConstants.put("ln10", 2.302585092994046);
         basicConstants.put("log2e", 1.442695040888963);
         basicConstants.put("euler", 0.577215664901533);
         basicConstants.put("log10e", 0.434294481903252);
         basicConstants.put("phi", 1.618033988749895);
-        basicConstants.put("pi", Math.PI);
-        basicConstants.put("max_value", Double.MAX_VALUE);
-        basicConstants.put("min_value", Double.MIN_VALUE);
-        basicConstants.put("infinity", Double.POSITIVE_INFINITY);
 
         BASIC_FUNCTIONS = Collections.unmodifiableMap(basicFunctions);
         BASIC_CONSTANTS = Collections.unmodifiableMap(basicConstants);
@@ -44,6 +51,13 @@ public class MathDictionary {
         this.constants = new HashMap<>(BASIC_CONSTANTS);
     }
 
+    /**
+     * Create a new dictionary with custom functions and constants.
+     * Names are expected to be following the {@link MathDictionary#NAME_PATTERN} pattern.
+     * You can't provide duplicate constants or functions.
+     * @param functions functions to register
+     * @param constants constants to register
+     */
     public MathDictionary(Map<String, Function> functions, Map<String, Double> constants) {
         this();
         tryRegister("Function", this.functions, functions);
@@ -60,6 +74,9 @@ public class MathDictionary {
             }
             if (in.containsKey(name)) {
                 throw new IllegalStateException(what + " under the name '" + name + "' is already registered");
+            }
+            if (entry.getValue() == null) {
+                throw new NullPointerException(what + " under the name '" + name + "' has no value");
             }
             in.put(name, entry.getValue());
         }
@@ -82,10 +99,6 @@ public class MathDictionary {
         return c >= '0' && c <= '9';
     }
 
-    public static boolean isNumberChar(char c) {
-        return isDigitChar(c) || c == '.' || c == 'e';
-    }
-
     public static boolean isWordChar(char c) {
         return (c >= 'a' && c <= 'z') || c == '_';
     }
@@ -99,15 +112,32 @@ public class MathDictionary {
     public interface Function {
         Function SELF = a -> a;
 
-        default double eval(double a, double... num) {
-            return eval(a, num[0]);
+        /**
+         * Calculate result of function for desired numbers
+         * @param a the first input number of function
+         * @param num other input number arguments, expected length >= 2
+         * @return result of calculation
+         */
+        default double accept(double a, double... num) {
+            return accept(a, num[0]);
         }
 
-        default double eval(double a, double b) {
-            return eval(a);
+        /**
+         * Calculate result of function for desired numbers
+         * @param a the first input number
+         * @param b the second input number
+         * @return result of calculation
+         */
+        default double accept(double a, double b) {
+            return accept(a);
         }
 
-        double eval(double a);
+        /**
+         * Calculate result of function for desired number
+         * @param a input number
+         * @return result of calculation
+         */
+        double accept(double a);
     }
 
     /**
@@ -120,7 +150,7 @@ public class MathDictionary {
         ATAN(a -> Math.atan(a)),
         ATAN2 {
             @Override
-            public double eval(double a, double b) {
+            public double accept(double a, double b) {
                 return Math.atan2(a, b);
             }
         },
@@ -137,33 +167,33 @@ public class MathDictionary {
         LOG1P(a -> Math.log1p(a)),
         MAX {
             @Override
-            public double eval(double a, double... num) {
+            public double accept(double a, double... num) {
                 for (double j : num)
                     a = Math.max(a, j);
                 return a;
             }
 
             @Override
-            public double eval(double a, double b) {
+            public double accept(double a, double b) {
                 return Math.max(a, b);
             }
         },
         MIN {
             @Override
-            public double eval(double a, double... num) {
+            public double accept(double a, double... num) {
                 for (double j : num)
                     a = Math.min(a, j);
                 return a;
             }
 
             @Override
-            public double eval(double a, double b) {
+            public double accept(double a, double b) {
                 return Math.min(a, b);
             }
         },
         NEXT_AFTER {
             @Override
-            public double eval(double a, double b) {
+            public double accept(double a, double b) {
                 return Math.nextAfter(a, b);
             }
         },
@@ -175,6 +205,18 @@ public class MathDictionary {
         SIN(a -> Math.sin(a)),
         SINH(a -> Math.sinh(a)),
         SQRT(a -> Math.sqrt(a)),
+        ROOT {
+            @Override
+            public double accept(double a, double b) {
+                return Math.pow(a, 1/b);
+            }
+        },
+        POW {
+            @Override
+            public double accept(double a, double b) {
+                return Math.pow(a, b);
+            }
+        },
         TAN(a -> Math.tan(a)),
         TANH(a -> Math.tanh(a)),
         TO_DEGREES(a -> Math.toDegrees(a)),
@@ -182,13 +224,13 @@ public class MathDictionary {
         ULP(a -> Math.ulp(a)),
         HYPOT {
             @Override
-            public double eval(double a, double b) {
+            public double accept(double a, double b) {
                 return Math.hypot(a, b);
             }
         },
         IEEE_REMAINDER {
             @Override
-            public double eval(double a, double b) {
+            public double accept(double a, double b) {
                 return Math.IEEEremainder(a, b);
             }
         },
@@ -205,18 +247,18 @@ public class MathDictionary {
         }
 
         @Override
-        public double eval(double a) {
-            return internal.eval(a);
+        public double accept(double a) {
+            return internal.accept(a);
         }
 
         @Override
-        public double eval(double a, double b) {
-            return internal.eval(a, b);
+        public double accept(double a, double b) {
+            return internal.accept(a, b);
         }
 
         @Override
-        public double eval(double a, double... num) {
-            return internal.eval(a, num);
+        public double accept(double a, double... num) {
+            return internal.accept(a, num);
         }
     }
 }

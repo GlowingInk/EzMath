@@ -7,7 +7,7 @@ import java.util.Map;
 import static me.imdanix.math.MathDictionary.*;
 
 /**
- * Best performance for repeating calculations over {@link ExpressionEvaluator}.
+ * Better performance for repeating calculations over {@link ExpressionEvaluator}.
  * Unlike {@link ExpressionEvaluator}, accepts custom variables after expression compiling.
  */
 public class FormulaEvaluator {
@@ -27,20 +27,20 @@ public class FormulaEvaluator {
     }
 
     public double eval(Map<String, Double> variables) {
-        return term.eval(variables);
+        return term.calc(variables);
     }
 
     private Term thirdImportance(PointerHolder holder) {
         Term x = secondImportance(holder);
         while (true) {
-            if (holder.check('+')) {
+            if (holder.progress('+')) {
                 Term a = x;
                 Term b = secondImportance(holder);
-                x = (vars) -> a.eval(vars) + b.eval(vars);
-            } else if (holder.check('-')) {
+                x = (vars) -> a.calc(vars) + b.calc(vars);
+            } else if (holder.progress('-')) {
                 Term a = x;
                 Term b = secondImportance(holder);
-                x = (vars) -> a.eval(vars) - b.eval(vars);
+                x = (vars) -> a.calc(vars) - b.calc(vars);
             } else {
                 return x;
             }
@@ -50,18 +50,18 @@ public class FormulaEvaluator {
     private Term secondImportance(PointerHolder holder) {
         Term x = firstImportance(holder);
         while (true) {
-            if (holder.check('*')) {
+            if (holder.progress('*')) {
                 Term a = x;
                 Term b = firstImportance(holder);
-                x = (vars) -> a.eval(vars) * b.eval(vars);
-            } else if (holder.check('/')) {
+                x = (vars) -> a.calc(vars) * b.calc(vars);
+            } else if (holder.progress('/')) {
                 Term a = x;
                 Term b = firstImportance(holder);
-                x = (vars) -> a.eval(vars) / b.eval(vars);
-            } else if (holder.check('%')) {
+                x = (vars) -> a.calc(vars) / b.calc(vars);
+            } else if (holder.progress('%')) {
                 Term a = x;
                 Term b = firstImportance(holder);
-                x = (vars) -> a.eval(vars) % b.eval(vars);
+                x = (vars) -> a.calc(vars) % b.calc(vars);
             } else {
                 return x;
             }
@@ -69,46 +69,53 @@ public class FormulaEvaluator {
     }
 
     private Term firstImportance(PointerHolder holder) {
-        if (holder.check('-')) { // "-5", "--5"..
+        if (holder.progress('-')) { // "-5", "--5"..
             Term a = firstImportance(holder);
-            return (vars) -> -a.eval(vars);
+            return (vars) -> -a.calc(vars);
         }
         //noinspection StatementWithEmptyBody
-        while (holder.check('+')) /* just skip */; // "+5", "++5"..
+        while (holder.progress('+')) /* just skip */; // "+5", "++5"..
         Term x = ZERO;
         int start = holder.pointer;
-        if (holder.check('(')) {
+        if (holder.progress('(')) {
             x = thirdImportance(holder);
-            holder.check(')');
+            holder.progress(')');
         } else if (isDigitChar(holder.current())) {
             holder.pointer++;
-            while (isNumberChar(holder.current())) holder.pointer++;
+            while (isDigitChar(holder.current())) holder.pointer++;
+            if (holder.progress('.')) {
+                while (isDigitChar(holder.current())) holder.pointer++;
+                if (holder.progress('e')) {
+                    holder.progress('-');
+                    while (isDigitChar(holder.current())) holder.pointer++;
+                }
+            }
             double a = asDouble(holder.substring(start, holder.pointer), 0);
             x = (vars) -> a;
         } else if (isWordChar(holder.current())) {
             holder.pointer++;
             while (isWordChar(holder.current()) || isDigitChar(holder.current())) holder.pointer++;
             String str = holder.substring(start, holder.pointer);
-            if (holder.check('(')) {
+            if (holder.progress('(')) {
                 Term a = thirdImportance(holder);
                 Term[] args = new Term[0];
-                while (holder.check(',')) {
+                while (holder.progress(',')) {
                     args = Arrays.copyOfRange(args, 0, args.length + 1);
                     args[args.length - 1] = thirdImportance(holder);
                 }
                 Term[] finArgs = args;
                 MathDictionary.Function function = math.getFunction(str);
                 if (function != null) x = switch (args.length) {
-                    case 0 -> (vars) -> function.eval(a.eval(vars));
-                    case 1 -> (vars) -> function.eval(a.eval(vars), finArgs[0].eval(vars));
+                    case 0 -> (vars) -> function.accept(a.calc(vars));
+                    case 1 -> (vars) -> function.accept(a.calc(vars), finArgs[0].calc(vars));
                     default -> (vars) -> {
                         double[] numArgs = new double[finArgs.length];
                         for (int i = 0; i < finArgs.length; i++)
-                            numArgs[i] = finArgs[i].eval(vars);
-                        return function.eval(a.eval(vars), numArgs);
+                            numArgs[i] = finArgs[i].calc(vars);
+                        return function.accept(a.calc(vars), numArgs);
                     };
                 };
-                holder.check(')');
+                holder.progress(')');
             } else {
                 Double cons = math.getConstant(str);
                 if (cons == null) {
@@ -120,17 +127,17 @@ public class FormulaEvaluator {
             }
         }
 
-        if (holder.check('^')) {
+        if (holder.progress('^')) {
             Term a = x;
             Term b = firstImportance(holder);
-            x = (vars) -> Math.pow(a.eval(vars), b.eval(vars));
+            x = (vars) -> Math.pow(a.calc(vars), b.calc(vars));
         }
         return x;
     }
 
     @FunctionalInterface
     private interface Term {
-        double eval(Map<String, Double> vars);
+        double calc(Map<String, Double> vars);
     }
 
     /**
@@ -153,7 +160,7 @@ public class FormulaEvaluator {
             return origin.length() > pointer ? origin.charAt(pointer) : ' ';
         }
 
-        boolean check(char c) {
+        boolean progress(char c) {
             if (current() == c) {
                 pointer++;
                 return true;
