@@ -10,19 +10,23 @@ import java.util.regex.Pattern;
 /**
  * The dictionary for basic math constants and functions.
  * <p>
- * Intended to be immutable after its creation, yet if you're from parallel universe with other math constants than
+ * Intended to be immutable after its creation, yet if you're from parallel universe with altered math constants than
  * provided initially, the class is still open for extending.
  */
 public class MathDictionary {
-    private static final Pattern FLOAT = Pattern.compile("\\d+(\\.\\d+(e-?\\d+)?)?");
+    private static final Pattern FLOAT = Pattern.compile("\\d+(\\.\\d+(e[+-]?\\d+)?)?");
 
     public static final Pattern NAME_PATTERN = Pattern.compile("[a-z][a-z\\d_]+");
     public static final Map<String, Function> BASIC_FUNCTIONS;
     public static final Map<String, Double> BASIC_CONSTANTS;
     static {
-        Map<String, Function> basicFunctions = new HashMap<>(DefaultFunctions.values().length);
-        for (DefaultFunctions func : DefaultFunctions.values())
+        Map<String, Function> basicFunctions = new HashMap<>(SingleArgFunctions.values().length);
+        for (SingleArgFunctions func : SingleArgFunctions.values()) {
+            basicFunctions.put(func.name().toLowerCase(Locale.ROOT), func.getFunction());
+        }
+        for (MultiArgFunctions func : MultiArgFunctions.values()) {
             basicFunctions.put(func.name().toLowerCase(Locale.ROOT), func);
+        }
         Map<String, Double> basicConstants = new HashMap<>(12);
         basicConstants.put("e", Math.E);
         basicConstants.put("pi", Math.PI);
@@ -52,11 +56,11 @@ public class MathDictionary {
     }
 
     /**
-     * Create a new dictionary with custom functions and constants.
+     * Creates a new dictionary with custom functions and constants.
      * Names are expected to be following the {@link MathDictionary#NAME_PATTERN} pattern.
      * You can't provide duplicate constants or functions.
-     * @param functions functions to register
-     * @param constants constants to register
+     * @param functions additional functions to register
+     * @param constants additional constants to register
      */
     public MathDictionary(Map<String, Function> functions, Map<String, Double> constants) {
         this();
@@ -65,6 +69,7 @@ public class MathDictionary {
     }
 
     private static <T> void tryRegister(String what, Map<String, T> in, Map<String, T> out) {
+        if (out == null) return;
         for (Map.Entry<String, T> entry : out.entrySet()) {
             String name = entry.getKey();
             Matcher matcher = NAME_PATTERN.matcher(name);
@@ -143,17 +148,11 @@ public class MathDictionary {
     /**
      * Some default math functions
      */
-    private enum DefaultFunctions implements Function {
+    private enum SingleArgFunctions {
         ABS(a -> Math.abs(a)),
         ACOS(a -> Math.acos(a)),
         ASIN(a -> Math.asin(a)),
         ATAN(a -> Math.atan(a)),
-        ATAN2 {
-            @Override
-            public double accept(double a, double b) {
-                return Math.atan2(a, b);
-            }
-        },
         CBRT(a -> Math.cbrt(a)),
         CEIL(a -> Math.ceil(a)),
         COS(a -> Math.cos(a)),
@@ -165,11 +164,45 @@ public class MathDictionary {
         LOG(a -> Math.log(a)),
         LOG10 (a -> Math.log10(a)),
         LOG1P(a -> Math.log1p(a)),
+        NEXT_DOWN(a -> Math.nextDown(a)),
+        NEXT_UP(a -> Math.nextUp(a)),
+        ROUND(a -> Math.round(a)), // TODO Round to specific place, replace FORMAT_FLOAT
+        RINT(a -> Math.rint(a)),
+        SIGNUM(a -> Math.signum(a)),
+        SIN(a -> Math.sin(a)),
+        SINH(a -> Math.sinh(a)),
+        SQRT(a -> Math.sqrt(a)),
+        TAN(a -> Math.tan(a)),
+        TANH(a -> Math.tanh(a)),
+        TO_DEGREES(a -> Math.toDegrees(a)),
+        TO_RADIANS(a -> Math.toRadians(a)),
+        ULP(a -> Math.ulp(a)),
+        FORMAT_FLOAT((a) -> Math.round(a * 100D) / 100D);
+
+        private final Function internal;
+
+        SingleArgFunctions(Function internal) {
+            this.internal = internal;
+        }
+
+        public Function getFunction() {
+            return internal;
+        }
+    }
+
+    private enum MultiArgFunctions implements Function {
+        ATAN2 {
+            @Override
+            public double accept(double a, double b) {
+                return Math.atan2(a, b);
+            }
+        },
         MAX {
             @Override
             public double accept(double a, double... num) {
-                for (double j : num)
+                for (double j : num) {
                     a = Math.max(a, j);
+                }
                 return a;
             }
 
@@ -181,8 +214,9 @@ public class MathDictionary {
         MIN {
             @Override
             public double accept(double a, double... num) {
-                for (double j : num)
+                for (double j : num) {
                     a = Math.min(a, j);
+                }
                 return a;
             }
 
@@ -197,14 +231,6 @@ public class MathDictionary {
                 return Math.nextAfter(a, b);
             }
         },
-        NEXT_DOWN(a -> Math.nextDown(a)),
-        NEXT_UP(a -> Math.nextUp(a)),
-        ROUND(a -> Math.round(a)),
-        RINT(a -> Math.rint(a)),
-        SIGNUM(a -> Math.signum(a)),
-        SIN(a -> Math.sin(a)),
-        SINH(a -> Math.sinh(a)),
-        SQRT(a -> Math.sqrt(a)),
         ROOT {
             @Override
             public double accept(double a, double b) {
@@ -217,11 +243,6 @@ public class MathDictionary {
                 return Math.pow(a, b);
             }
         },
-        TAN(a -> Math.tan(a)),
-        TANH(a -> Math.tanh(a)),
-        TO_DEGREES(a -> Math.toDegrees(a)),
-        TO_RADIANS(a -> Math.toRadians(a)),
-        ULP(a -> Math.ulp(a)),
         HYPOT {
             @Override
             public double accept(double a, double b) {
@@ -233,32 +254,11 @@ public class MathDictionary {
             public double accept(double a, double b) {
                 return Math.IEEEremainder(a, b);
             }
-        },
-        FORMAT_FLOAT((a) -> Math.round(a * 100D) / 100D);
-
-        private final Function internal;
-
-        DefaultFunctions() {
-            internal = SELF;
-        }
-
-        DefaultFunctions(Function internal) {
-            this.internal = internal;
-        }
+        };
 
         @Override
         public double accept(double a) {
-            return internal.accept(a);
-        }
-
-        @Override
-        public double accept(double a, double b) {
-            return internal.accept(a, b);
-        }
-
-        @Override
-        public double accept(double a, double... num) {
-            return internal.accept(a, num);
+            return a;
         }
     }
 }

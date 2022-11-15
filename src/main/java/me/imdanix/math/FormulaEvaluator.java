@@ -86,7 +86,7 @@ public class FormulaEvaluator {
             if (holder.progress('.')) {
                 while (isDigitChar(holder.current())) holder.pointer++;
                 if (holder.progress('e')) {
-                    holder.progress('-');
+                    if (!holder.progress('-')) holder.progress('+');
                     while (isDigitChar(holder.current())) holder.pointer++;
                 }
             }

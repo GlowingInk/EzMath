@@ -67,7 +67,7 @@ public class ExpressionEvaluator {
             if (progress('.')) {
                 while (isDigitChar(current())) pointer++;
                 if (progress('e')) {
-                    progress('-');
+                    if (!progress('-')) progress('+');
                     while (isDigitChar(current())) pointer++;
                 }
             }
