@@ -1,4 +1,4 @@
-# EzMath
+# EzMath ![Latest Version](https://img.shields.io/github/v/tag/imDaniX/EzMath.svg?sort=semver&label=release)
 
 Simple math evaluator. Supports constants, functions, variables.
 Evaluators code is based off Boann's answer on [StackOverflow](https://stackoverflow.com/a/26227947/9819521).
@@ -26,11 +26,11 @@ Add jitpack repository
     <url>https://jitpack.io</url>
 </repository>
 ```
-Add dependency
+Add dependency (version might be outdated, see the top)
 ```xml
 <dependency>
     <groupId>com.github.imDaniX</groupId>
     <artifactId>EzMath</artifactId>
-    <version>v3.5</version>
+    <version>v3.7</version>
 </dependency>
 ```

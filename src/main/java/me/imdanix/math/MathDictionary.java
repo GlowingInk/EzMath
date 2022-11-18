@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -150,32 +151,32 @@ public class MathDictionary {
      */
     private enum SingleArgFunctions {
         ABS(a -> Math.abs(a)),
-        ACOS(a -> Math.acos(a)),
-        ASIN(a -> Math.asin(a)),
-        ATAN(a -> Math.atan(a)),
-        CBRT(a -> Math.cbrt(a)),
-        CEIL(a -> Math.ceil(a)),
         COS(a -> Math.cos(a)),
-        COSH(a -> Math.cosh(a)),
-        EXP(a -> Math.exp(a)),
-        EXPM1 (a -> Math.expm1(a)),
-        FLOOR(a -> Math.floor(a)),
-        GET_EXPONENT(a -> Math.getExponent(a)),
+        SIN(a -> Math.sin(a)),
+        TAN(a -> Math.tan(a)),
         LOG(a -> Math.log(a)),
         LOG10 (a -> Math.log10(a)),
         LOG1P(a -> Math.log1p(a)),
-        NEXT_DOWN(a -> Math.nextDown(a)),
-        NEXT_UP(a -> Math.nextUp(a)),
+        CEIL(a -> Math.ceil(a)),
+        FLOOR(a -> Math.floor(a)),
         ROUND(a -> Math.round(a)), // TODO Round to specific place, replace FORMAT_FLOAT
-        RINT(a -> Math.rint(a)),
-        SIGNUM(a -> Math.signum(a)),
-        SIN(a -> Math.sin(a)),
-        SINH(a -> Math.sinh(a)),
         SQRT(a -> Math.sqrt(a)),
-        TAN(a -> Math.tan(a)),
+        CBRT(a -> Math.cbrt(a)),
+        ACOS(a -> Math.acos(a)),
+        ASIN(a -> Math.asin(a)),
+        ATAN(a -> Math.atan(a)),
+        COSH(a -> Math.cosh(a)),
+        SINH(a -> Math.sinh(a)),
         TANH(a -> Math.tanh(a)),
+        EXP(a -> Math.exp(a)),
         TO_DEGREES(a -> Math.toDegrees(a)),
         TO_RADIANS(a -> Math.toRadians(a)),
+        EXPM1 (a -> Math.expm1(a)),
+        GET_EXPONENT(a -> Math.getExponent(a)),
+        NEXT_DOWN(a -> Math.nextDown(a)),
+        NEXT_UP(a -> Math.nextUp(a)),
+        RINT(a -> Math.rint(a)),
+        SIGNUM(a -> Math.signum(a)),
         ULP(a -> Math.ulp(a)),
         FORMAT_FLOAT((a) -> Math.round(a * 100D) / 100D);
 
@@ -191,12 +192,6 @@ public class MathDictionary {
     }
 
     private enum MultiArgFunctions implements Function {
-        ATAN2 {
-            @Override
-            public double accept(double a, double b) {
-                return Math.atan2(a, b);
-            }
-        },
         MAX {
             @Override
             public double accept(double a, double... num) {
@@ -225,12 +220,6 @@ public class MathDictionary {
                 return Math.min(a, b);
             }
         },
-        NEXT_AFTER {
-            @Override
-            public double accept(double a, double b) {
-                return Math.nextAfter(a, b);
-            }
-        },
         ROOT {
             @Override
             public double accept(double a, double b) {
@@ -243,16 +232,63 @@ public class MathDictionary {
                 return Math.pow(a, b);
             }
         },
+        ATAN2 {
+            @Override
+            public double accept(double a, double b) {
+                return Math.atan2(a, b);
+            }
+        },
         HYPOT {
             @Override
             public double accept(double a, double b) {
                 return Math.hypot(a, b);
             }
         },
+        NEXT_AFTER {
+            @Override
+            public double accept(double a, double b) {
+                return Math.nextAfter(a, b);
+            }
+        },
         IEEE_REMAINDER {
             @Override
             public double accept(double a, double b) {
                 return Math.IEEEremainder(a, b);
+            }
+        },
+        COPY_SIGN {
+            @Override
+            public double accept(double a, double b) {
+                return Math.copySign(a, b);
+            }
+        },
+        FMA {
+            @Override
+            public double accept(double a, double... num) {
+                return Math.fma(a, num[0], num[1]);
+            }
+        },
+        SCALB {
+            @Override
+            public double accept(double a, double b) {
+                return Math.scalb(a, (int) Math.round(b));
+            }
+        },
+        RNG {
+            @Override
+            public double accept(double a, double... num) {
+                int choice = ThreadLocalRandom.current().nextInt(num.length + 1);
+                return choice == 0 ? a : num[choice];
+            }
+
+            @Override
+            public double accept(double a, double b) {
+                return ThreadLocalRandom.current().nextDouble(a, b);
+            }
+
+            @Override
+            public double accept(double a) {
+                return ThreadLocalRandom.current().nextDouble(a);
             }
         };
 
