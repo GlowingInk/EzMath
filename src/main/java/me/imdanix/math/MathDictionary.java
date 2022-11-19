@@ -35,12 +35,12 @@ public class MathDictionary {
         basicConstants.put("min_value", Double.MIN_VALUE);
         basicConstants.put("infinity", Double.POSITIVE_INFINITY);
         basicConstants.put("nan", Double.NaN);
+        basicConstants.put("euler", 0.577215664901533);
+        basicConstants.put("phi", 1.618033988749895);
         basicConstants.put("ln2", 0.693147180559945);
         basicConstants.put("ln10", 2.302585092994046);
         basicConstants.put("log2e", 1.442695040888963);
-        basicConstants.put("euler", 0.577215664901533);
         basicConstants.put("log10e", 0.434294481903252);
-        basicConstants.put("phi", 1.618033988749895);
 
         BASIC_FUNCTIONS = Collections.unmodifiableMap(basicFunctions);
         BASIC_CONSTANTS = Collections.unmodifiableMap(basicConstants);
@@ -150,10 +150,16 @@ public class MathDictionary {
      * Some default math functions
      */
     private enum SingleArgFunctions {
-        ABS(a -> Math.abs(a)),
         COS(a -> Math.cos(a)),
         SIN(a -> Math.sin(a)),
         TAN(a -> Math.tan(a)),
+        ACOS(a -> Math.acos(a)),
+        ASIN(a -> Math.asin(a)),
+        ATAN(a -> Math.atan(a)),
+        COSH(a -> Math.cosh(a)),
+        SINH(a -> Math.sinh(a)),
+        TANH(a -> Math.tanh(a)),
+        ABS(a -> Math.abs(a)),
         LOG(a -> Math.log(a)),
         LOG10 (a -> Math.log10(a)),
         LOG1P(a -> Math.log1p(a)),
@@ -162,16 +168,10 @@ public class MathDictionary {
         ROUND(a -> Math.round(a)), // TODO Round to specific place, replace FORMAT_FLOAT
         SQRT(a -> Math.sqrt(a)),
         CBRT(a -> Math.cbrt(a)),
-        ACOS(a -> Math.acos(a)),
-        ASIN(a -> Math.asin(a)),
-        ATAN(a -> Math.atan(a)),
-        COSH(a -> Math.cosh(a)),
-        SINH(a -> Math.sinh(a)),
-        TANH(a -> Math.tanh(a)),
         EXP(a -> Math.exp(a)),
+        EXPM1 (a -> Math.expm1(a)),
         TO_DEGREES(a -> Math.toDegrees(a)),
         TO_RADIANS(a -> Math.toRadians(a)),
-        EXPM1 (a -> Math.expm1(a)),
         GET_EXPONENT(a -> Math.getExponent(a)),
         NEXT_DOWN(a -> Math.nextDown(a)),
         NEXT_UP(a -> Math.nextUp(a)),
@@ -289,6 +289,12 @@ public class MathDictionary {
             @Override
             public double accept(double a) {
                 return ThreadLocalRandom.current().nextDouble(a);
+            }
+        },
+        RAW_HYPOT {
+            @Override
+            public double accept(double a, double b) {
+                return a*a + b*b;
             }
         };
 
