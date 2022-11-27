@@ -105,8 +105,8 @@ public class FormulaEvaluator {
                         args = Arrays.copyOfRange(args, 0, args.length + 1);
                         args[args.length - 1] = thirdImportance(holder);
                     }
-                    Term[] finArgs = args;
                     if (function != null) {
+                        Term[] finArgs = args;
                         if (args.length == 1) {
                             x = (vars) -> function.accept(a.calc(vars), finArgs[0].calc(vars));
                         } else {
