@@ -47,7 +47,7 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 * `cosh(a)` - hyperbolic cosine of `a`
 * `sinh(a)` - hyperbolic sine of `a`
 * `tanh(a)` - hyperbolic tangent of `a`
-* `atan2(a,b)` - angle theta from the conversion of rectangular coordinates x, y to polar coordinates (r, theta)
+* `atan2(a,b)` - angle theta from the conversion of rectangular coordinates x(`b`), y(`a`) to polar coordinates (r, theta)
 * `abs(a)` - absolute value
 * `log` - logarithm
   * `log(a)` - natural logarithm (base E) of `a`
@@ -67,12 +67,12 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 * `to_degrees(a)` - angle measured in radians to approximately equivalent angle measured in degrees
 * `to_radians(a)` - angle measured in degrees to approximately equivalent angle measured in radians
 * `get_exponent(a)` - unbiased exponent used in the representation of `a`
-* `next_down(a)` - floating-point value adjacent to a number in the direction of negative infinity
-* `next_up(a)` - floating-point value adjacent to a number in the direction of positive infinity
+* `next_down(a)` - floating-point value adjacent to `a` in the direction of negative infinity
+* `next_up(a)` - floating-point value adjacent to `a` in the direction of positive infinity
 * `next_after(a,b)` - floating-point number adjacent to `a` in the direction of `b`
 * `signum(a)` - signum function of `a`
 * `ulp(a)` - size of an ulp of `a`
-* `ieee_remainder(a,b)` - remainder operation on two arguments as prescribed by the IEEE 754 standard
+* `ieee_remainder(a,b)` - remainder operation `%` on two arguments as prescribed by the IEEE 754 standard
 * `copy_sign(a,b)` - `a` with the sign of `b`
 * `fma(a,b,c)` - exact product of `a*b+c` rounded once
 * `scalb` - `a*2^b` rounded as if performed by a single correctly rounded floating-point multiply
