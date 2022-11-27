@@ -21,7 +21,8 @@ public abstract class BaseMathTest {
                 {"max(10,e,20)", max(10, max(E, 20))},
                 {"sin(sqrt(5))^2", pow(sin(sqrt(5)), 2)},
                 {"cos(234.66+5)", cos(234.66+5)},
-                {"hypot(12,sin(34))/56", hypot(12, sin(34)) / 56d}
+                {"hypot(12,sin(34))/56", hypot(12, sin(34)) / 56d},
+                {"fake_funct(5)+other_fake(1,2)+1", 1}
         };
     }
 }

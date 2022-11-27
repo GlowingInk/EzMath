@@ -97,24 +97,30 @@ public class FormulaEvaluator {
             while (isWordChar(holder.current()) || isDigitChar(holder.current())) holder.pointer++;
             String str = holder.substring(start, holder.pointer);
             if (holder.progress('(')) {
-                Term a = thirdImportance(holder);
-                Term[] args = new Term[0];
-                while (holder.progress(',')) {
-                    args = Arrays.copyOfRange(args, 0, args.length + 1);
-                    args[args.length - 1] = thirdImportance(holder);
-                }
-                Term[] finArgs = args;
                 MathDictionary.Function function = math.getFunction(str);
-                if (function != null) x = switch (args.length) {
-                    case 0 -> (vars) -> function.accept(a.calc(vars));
-                    case 1 -> (vars) -> function.accept(a.calc(vars), finArgs[0].calc(vars));
-                    default -> (vars) -> {
-                        double[] numArgs = new double[finArgs.length];
-                        for (int i = 0; i < finArgs.length; i++)
-                            numArgs[i] = finArgs[i].calc(vars);
-                        return function.accept(a.calc(vars), numArgs);
-                    };
-                };
+                Term a = thirdImportance(holder);
+                if (holder.progress(',')) {
+                    Term[] args = {thirdImportance(holder)};
+                    while (holder.progress(',')) {
+                        args = Arrays.copyOfRange(args, 0, args.length + 1);
+                        args[args.length - 1] = thirdImportance(holder);
+                    }
+                    Term[] finArgs = args;
+                    if (function != null) {
+                        if (args.length == 1) {
+                            x = (vars) -> function.accept(a.calc(vars), finArgs[0].calc(vars));
+                        } else {
+                            x = (vars) -> {
+                                double[] numArgs = new double[finArgs.length];
+                                for (int i = 0; i < finArgs.length; i++)
+                                    numArgs[i] = finArgs[i].calc(vars);
+                                return function.accept(a.calc(vars), numArgs);
+                            };
+                        }
+                    }
+                } else if (function != null) {
+                    x = (vars) -> function.accept(a.calc(vars));
+                }
                 holder.progress(')');
             } else {
                 Double cons = math.getConstant(str);

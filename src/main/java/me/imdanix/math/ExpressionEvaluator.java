@@ -79,19 +79,19 @@ public class ExpressionEvaluator {
             if (progress('(')) {
                 MathDictionary.Function function = math.getFunction(str);
                 x = thirdImportance();
-                double[] args = {};
-                while (progress(',')) {
-                    args = Arrays.copyOfRange(args, 0, args.length + 1);
-                    args[args.length - 1] = thirdImportance();
-                }
-                if (function == null) {
-                    x = 0;
+                if (progress(',')) {
+                    double[] args = {thirdImportance()};
+                    while (progress(',')) {
+                        args = Arrays.copyOfRange(args, 0, args.length + 1);
+                        args[args.length - 1] = thirdImportance();
+                    }
+                    x = function == null
+                            ? 0
+                            : args.length == 1 ? function.accept(x, args[0]) : function.accept(x, args);
                 } else {
-                    x = switch (args.length) {
-                        case 0 -> function.accept(x);
-                        case 1 -> function.accept(x, args[0]);
-                        default -> function.accept(x, args);
-                    };
+                    x = function == null
+                            ? 0
+                            : function.accept(x);
                 }
                 progress(')');
             } else {

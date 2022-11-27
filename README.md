@@ -102,6 +102,6 @@ Add dependency (version might be outdated, see the top)
 <dependency>
     <groupId>com.github.imDaniX</groupId>
     <artifactId>EzMath</artifactId>
-    <version>v3.8</version>
+    <version>v3.9</version>
 </dependency>
 ```
