@@ -14,7 +14,7 @@ public class FormulaEvaluatorTest extends BaseMathTest {
     }
 
     @Test
-    public void variables() {
+    public void testVariables() {
         FormulaEvaluator evaluator = new FormulaEvaluator("sqrt(leet*13)+other");
         assertEquals(evaluator.eval(Map.of("leet", 1337D, "other", 5D)), sqrt(1337*13)+5);
         assertEquals(evaluator.eval(Map.of("leet", 7331D, "other", 2D)), sqrt(7331*13)+2);

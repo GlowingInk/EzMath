@@ -160,7 +160,6 @@ public class MathDictionary {
         SINH(a -> Math.sinh(a)),
         TANH(a -> Math.tanh(a)),
         ABS(a -> Math.abs(a)),
-        LOG(a -> Math.log(a)),
         LOG10 (a -> Math.log10(a)),
         LOG1P(a -> Math.log1p(a)),
         CEIL(a -> Math.ceil(a)),
@@ -220,12 +219,6 @@ public class MathDictionary {
                 return Math.min(a, b);
             }
         },
-        ROOT {
-            @Override
-            public double accept(double a, double b) {
-                return Math.pow(a, 1/b);
-            }
-        },
         POW {
             @Override
             public double accept(double a, double b) {
@@ -274,6 +267,17 @@ public class MathDictionary {
                 return Math.scalb(a, (int) Math.round(b));
             }
         },
+        LOG {
+            @Override
+            public double accept(double a, double b) {
+                return Math.log(a) / Math.log(b);
+            }
+
+            @Override
+            public double accept(double a) {
+                return Math.log(a);
+            }
+        },
         RNG {
             @Override
             public double accept(double a, double... num) {
@@ -295,6 +299,12 @@ public class MathDictionary {
             @Override
             public double accept(double a, double b) {
                 return a*a + b*b;
+            }
+        },
+        ROOT {
+            @Override
+            public double accept(double a, double b) {
+                return Math.pow(a, 1/b);
             }
         };
 

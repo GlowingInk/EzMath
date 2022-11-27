@@ -19,6 +19,7 @@ public abstract class BaseMathTest {
                 {"-infinity + infinity", Double.NaN},
                 {"(pi+e)/13", (PI + E) / 13d},
                 {"max(10,e,20)", max(10, max(E, 20))},
+                {"log(11)+log(256,2)", log(11) + 8},
                 {"sin(sqrt(5))^2", pow(sin(sqrt(5)), 2)},
                 {"cos(234.66+5)", cos(234.66+5)},
                 {"hypot(12,sin(34))/56", hypot(12, sin(34)) / 56d},

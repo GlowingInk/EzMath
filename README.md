@@ -18,75 +18,71 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 `pi/2`, `e^3`
 <details><summary>List of available constants</summary>
 
-#### Java provided constants
-* `e` - the base of the natural logarithms
+* `e` - Euler's number - the base of the natural logarithms
 * `pi` - the ratio of the circumference of a circle to its diameter
 * `infinity` - infinite value
 * `nan` - not-a-number value
 * `max_value` - the largest finite value that can be used in calculations
-* `min_value` - the smallest nonzero value that can be used in calculations
-
-#### EzMath provided constants
-* `euler` - Euler's constant
+* `min_value` - the smallest positive value that can be used in calculations
+* `euler` - Euler's (Euler-Mascheroni) constant
 * `phi` - the golden ratio value
 * `ln2` - natural logarithm of 2
 * `ln10` - natural logarithm of 10
-* `log2e` - base-2 logarithm of E
-* `log10e` - base-10 logarithm of E
+* `log2e` - base 2 logarithm of E
+* `log10e` - base 10 logarithm of E
 </details>
 
 ### Functions
 `sin(123)`, `sqrt(456)`, `max(78,910,11)`
 <details><summary>List of available functions</summary>
 
-#### Java provided functions
-* `max` - greater of specified values
-* `min` - smaller of specified values
-* `cos` - trigonometric cosine of an angle
-* `sin` - trigonometric sine of an angle
-* `tan` - trigonometric tangent of an angle
-* `acos` - arc cosine of a value
-* `asin` - arc sine of a value
-* `atan` - arc tangent of a value
-* `cosh` - hyperbolic cosine of a value
-* `sinh` - hyperbolic sine of a value
-* `tanh` - hyperbolic tangent of a value
-* `atan2` - angle theta from the conversion of rectangular coordinates x, y to polar coordinates (r, theta)
-* `abs` - absolute value
-* `log` - natural logarithm (base e)
-* `log10` - base 10 logarithm
-* `log1p` - natural logarithm of the sum of the argument and 1
-* `ceil` - smallest value that is greater than or equal to the argument and is equal to a mathematical integer
-* `floor` - largest value that is less than or equal to the argument and is equal to a mathematical integer
-* `round` - closest value to the argument, with ties rounding to positive infinity.
-* `rint` - value that is closest in value to the argument and is equal to a mathematical integer
-* `pow` - the first argument raised to the power of the second argument
-* `sqrt` - positive square root of a value
-* `cbrt` - cube root of a value
-* `hypot` - `sqrt(a^2+b^2)` without intermediate overflow or underflow
-* `exp` - Euler's number e raised to the power of a value
-* `expm1` - Euler's number e raised to the power of a value, minus 1
-* `to_degrees` - angle measured in radians to approximately equivalent angle measured in degrees
-* `to_radians` - angle measured in degrees to approximately equivalent angle measured in radians
-* `get_exponent` - unbiased exponent used in the representation of a value
-* `next_down` - floating-point value adjacent to a number in the direction of negative infinity
-* `next_up` - floating-point value adjacent to a number in the direction of positive infinity
-* `next_after` - floating-point number adjacent to the first argument in the direction of the second argument
-* `signum` - signum function of the argument
-* `ulp` - size of an ulp of the argument
-* `ieee_remainder` - remainder operation on two arguments as prescribed by the IEEE 754 standard
-* `copy_sign` - the first floating-point argument with the sign of the second floating-point argument
-* `fma` - exact product of the first two arguments summed with the third argument and then rounded once
+* `max(a,b...)` - greater of specified values
+* `min(a,b...)` - smaller of specified values
+* `cos(a)` - trigonometric cosine of an angle
+* `sin(a)` - trigonometric sine of an angle
+* `tan(a)` - trigonometric tangent of an angle
+* `acos(a)` - arc cosine of `a`
+* `asin(a)` - arc sine of `a`
+* `atan(a)` - arc tangent of `a`
+* `cosh(a)` - hyperbolic cosine of `a`
+* `sinh(a)` - hyperbolic sine of `a`
+* `tanh(a)` - hyperbolic tangent of `a`
+* `atan2(a,b)` - angle theta from the conversion of rectangular coordinates x, y to polar coordinates (r, theta)
+* `abs(a)` - absolute value
+* `log` - logarithm
+  * `log(a)` - natural logarithm (base E) of `a`
+  * `log(a,b)` - base `b` logarithm of `a` (shortcut for `log(a)/log(b)`)
+* `log10(a)` - base 10 logarithm of `a`
+* `log1p(a)` - natural logarithm of `a+1`
+* `ceil(a)` - smallest value that is greater than or equal to `a` and is equal to a mathematical integer
+* `floor(a)` - largest value that is less than or equal to `a` and is equal to a mathematical integer
+* `round(a)` - closest value to `a`, with ties rounding to positive infinity
+* `rint(a)` - value that is closest to `a` and is equal to a mathematical integer
+* `pow(a,b)` - `a` raised to the power of `b`
+* `sqrt(a)` - positive square root of `a`
+* `cbrt(a)` - cube root of `a`
+* `hypot(a,b)` - `sqrt(a^2+b^2)` without intermediate overflow or underflow
+* `exp(a)` - E raised to the power of `a`
+* `expm1(a)` - E raised to the power of `a`, minus `1`
+* `to_degrees(a)` - angle measured in radians to approximately equivalent angle measured in degrees
+* `to_radians(a)` - angle measured in degrees to approximately equivalent angle measured in radians
+* `get_exponent(a)` - unbiased exponent used in the representation of `a`
+* `next_down(a)` - floating-point value adjacent to a number in the direction of negative infinity
+* `next_up(a)` - floating-point value adjacent to a number in the direction of positive infinity
+* `next_after(a,b)` - floating-point number adjacent to `a` in the direction of `b`
+* `signum(a)` - signum function of `a`
+* `ulp(a)` - size of an ulp of `a`
+* `ieee_remainder(a,b)` - remainder operation on two arguments as prescribed by the IEEE 754 standard
+* `copy_sign(a,b)` - `a` with the sign of `b`
+* `fma(a,b,c)` - exact product of `a*b+c` rounded once
 * `scalb` - `a*2^b` rounded as if performed by a single correctly rounded floating-point multiply
-
-#### EzMath provided functions
-* `format_float` - shortcut for `round(a*100)/100`
-* `root` - shortcut for `pow(a,1/b)`
+* `format_float(a)` - shortcut for `round(a*100)/100`
+* `root(a,b)` - shortcut for `pow(a,1/b)`
 * `rng` - random generator
-  * `rng(a)` - random number from 0 to a (exclusive)
-  * `rng(a,b)` - random number from a to b (exclusive)
-  * `rng(a,b,c...)` - one of random specified numbers
-* `raw_hypot` - shortcut for `a^2+b^2`
+  * `rng(a)` - random number `0 >= x < a`
+  * `rng(a,b)` - random number `a >= x < b`
+  * `rng(a,b,c...)` - random of specified numbers
+* `raw_hypot(a,b)` - shortcut for `a^2+b^2`
 </details>
 
 ## As dependency
@@ -102,6 +98,6 @@ Add dependency (version might be outdated, see the top)
 <dependency>
     <groupId>com.github.imDaniX</groupId>
     <artifactId>EzMath</artifactId>
-    <version>v3.9</version>
+    <version>v3.10</version>
 </dependency>
 ```
