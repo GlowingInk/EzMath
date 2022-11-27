@@ -78,10 +78,10 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 * `scalb` - `a*2^b` rounded as if performed by a single correctly rounded floating-point multiply
 * `format_float(a)` - shortcut for `round(a*100)/100`
 * `root(a,b)` - shortcut for `pow(a,1/b)`
-* `rng` - random generator
-  * `rng(a)` - random number `0 >= x < a`
-  * `rng(a,b)` - random number `a >= x < b`
-  * `rng(a,b,c...)` - random of specified numbers
+* `random` - random number generator
+  * `random(a)` - random number `0 >= x < a`
+  * `random(a,b)` - random number `a >= x < b`
+* `rng_choice(a,b...)` - random choose between multiple numbers
 * `raw_hypot(a,b)` - shortcut for `a^2+b^2`
 </details>
 
@@ -98,6 +98,6 @@ Add dependency (version might be outdated, see the top)
 <dependency>
     <groupId>com.github.imDaniX</groupId>
     <artifactId>EzMath</artifactId>
-    <version>v3.10</version>
+    <version>v3.11</version>
 </dependency>
 ```

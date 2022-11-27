@@ -278,13 +278,7 @@ public class MathDictionary {
                 return Math.log(a);
             }
         },
-        RNG {
-            @Override
-            public double accept(double a, double... num) {
-                int choice = ThreadLocalRandom.current().nextInt(num.length + 1);
-                return choice == 0 ? a : num[choice];
-            }
-
+        RANDOM {
             @Override
             public double accept(double a, double b) {
                 return ThreadLocalRandom.current().nextDouble(a, b);
@@ -293,6 +287,18 @@ public class MathDictionary {
             @Override
             public double accept(double a) {
                 return ThreadLocalRandom.current().nextDouble(a);
+            }
+        },
+        RNG_CHOICE {
+            @Override
+            public double accept(double a, double... num) {
+                int choice = ThreadLocalRandom.current().nextInt(num.length + 1);
+                return choice == 0 ? a : num[choice];
+            }
+
+            @Override
+            public double accept(double a, double b) {
+                return ThreadLocalRandom.current().nextBoolean() ? a : b;
             }
         },
         RAW_HYPOT {
