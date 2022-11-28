@@ -20,6 +20,7 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 
 * `e` - Euler's number - the base of the natural logarithms
 * `pi` - the ratio of the circumference of a circle to its diameter
+* `tau` - the ratio of the circumference of a circle to its radius (shortcut for `pi*2`)
 * `infinity` - infinite value
 * `nan` - not-a-number value
 * `max_value` - the largest finite value that can be used in calculations
@@ -38,6 +39,7 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 
 * `max(a,b...)` - greater of specified values
 * `min(a,b...)` - smaller of specified values
+* `average(a,b...)` - average of specified values
 * `cos(a)` - trigonometric cosine of an angle
 * `sin(a)` - trigonometric sine of an angle
 * `tan(a)` - trigonometric tangent of an angle
@@ -58,10 +60,13 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 * `floor(a)` - largest value that is less than or equal to `a` and is equal to a mathematical integer
 * `round(a)` - closest value to `a`, with ties rounding to positive infinity
 * `rint(a)` - value that is closest to `a` and is equal to a mathematical integer
-* `pow(a,b)` - `a` raised to the power of `b`
+* `format_float(a)` - round to first two digits after the floating point (shortcut for `round(a*100)/100`); very inaccurate for some numbers
+* `pow(a,b)` - `a` raised to the power of `b` (same as `a^b`)
 * `sqrt(a)` - positive square root of `a`
 * `cbrt(a)` - cube root of `a`
-* `hypot(a,b)` - `sqrt(a^2+b^2)` without intermediate overflow or underflow
+* `root(a,b)` - `b` root of `a` (shortcut for `pow(a,1/b)`)
+* `hypot(a,b)` - hypotenuse of `a` and `b` without intermediate overflow or underflow (`sqrt(a^2+b^2)`)
+* `raw_hypot(a,b)` - hypotenuse of `a` and `b` with no square root operation (shortcut for `a^2+b^2`)
 * `exp(a)` - E raised to the power of `a`
 * `expm1(a)` - E raised to the power of `a`, minus `1`
 * `to_degrees(a)` - angle measured in radians to approximately equivalent angle measured in degrees
@@ -75,14 +80,11 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 * `ieee_remainder(a,b)` - remainder operation `%` on two arguments as prescribed by the IEEE 754 standard
 * `copy_sign(a,b)` - `a` with the sign of `b`
 * `fma(a,b,c)` - exact product of `a*b+c` rounded once
-* `scalb` - `a*2^b` rounded as if performed by a single correctly rounded floating-point multiply
-* `format_float(a)` - shortcut for `round(a*100)/100`
-* `root(a,b)` - shortcut for `pow(a,1/b)`
+* `scalb` - `a*2^round(b)` rounded as if performed by a single correctly rounded floating-point multiply
 * `random` - random number generator
   * `random(a)` - random number `0 >= x < a`
   * `random(a,b)` - random number `a >= x < b`
 * `rng_choice(a,b...)` - random choose between multiple numbers
-* `raw_hypot(a,b)` - shortcut for `a^2+b^2`
 </details>
 
 ## As dependency
@@ -98,6 +100,6 @@ Add dependency (version might be outdated, see the top)
 <dependency>
     <groupId>com.github.imDaniX</groupId>
     <artifactId>EzMath</artifactId>
-    <version>v3.11</version>
+    <version>v3.12</version>
 </dependency>
 ```

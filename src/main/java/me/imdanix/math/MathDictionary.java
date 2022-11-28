@@ -21,20 +21,23 @@ public class MathDictionary {
     public static final Map<String, Function> BASIC_FUNCTIONS;
     public static final Map<String, Double> BASIC_CONSTANTS;
     static {
-        Map<String, Function> basicFunctions = new HashMap<>(SingleArgFunctions.values().length);
+        Map<String, Function> basicFunctions = new HashMap<>(
+                SingleArgFunctions.values().length + MultiArgFunctions.values().length
+        );
         for (SingleArgFunctions func : SingleArgFunctions.values()) {
             basicFunctions.put(func.name().toLowerCase(Locale.ROOT), func.getFunction());
         }
         for (MultiArgFunctions func : MultiArgFunctions.values()) {
             basicFunctions.put(func.name().toLowerCase(Locale.ROOT), func);
         }
-        Map<String, Double> basicConstants = new HashMap<>(12);
+        Map<String, Double> basicConstants = new HashMap<>(13);
         basicConstants.put("e", Math.E);
         basicConstants.put("pi", Math.PI);
         basicConstants.put("max_value", Double.MAX_VALUE);
         basicConstants.put("min_value", Double.MIN_VALUE);
         basicConstants.put("infinity", Double.POSITIVE_INFINITY);
         basicConstants.put("nan", Double.NaN);
+        basicConstants.put("tau", Math.PI * 2);
         basicConstants.put("euler", 0.577215664901533);
         basicConstants.put("phi", 1.618033988749895);
         basicConstants.put("ln2", 0.693147180559945);
@@ -311,6 +314,20 @@ public class MathDictionary {
             @Override
             public double accept(double a, double b) {
                 return Math.pow(a, 1/b);
+            }
+        },
+        AVERAGE {
+            @Override
+            public double accept(double a, double... num) {
+                for (double b : num) {
+                    a += b;
+                }
+                return a / (num.length + 1);
+            }
+
+            @Override
+            public double accept(double a, double b) {
+                return (a+b) / 2;
             }
         };
 
