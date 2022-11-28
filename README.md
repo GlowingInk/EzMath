@@ -60,7 +60,7 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 * `floor(a)` - largest value that is less than or equal to `a` and is equal to a mathematical integer
 * `round(a)` - closest value to `a`, with ties rounding to positive infinity
 * `rint(a)` - value that is closest to `a` and is equal to a mathematical integer
-* `format_float(a)` - round to first two digits after the floating point (shortcut for `round(a*100)/100`); very inaccurate for some numbers
+* `format_float(a)` - round to the first two decimal places (shortcut for `round(a*100)/100`); very inaccurate for some numbers
 * `pow(a,b)` - `a` raised to the power of `b` (same as `a^b`)
 * `sqrt(a)` - positive square root of `a`
 * `cbrt(a)` - cube root of `a`
