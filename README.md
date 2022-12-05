@@ -13,7 +13,7 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 ### Basic math operators
 `1+2`, `3-4`, `5*6`, `7/8`, `9^10`, `11%12`
 ### Grouping
-`(1+2)`, `(3^4) - 567`, `(89/(10*11)) / 1213`
+`(1+2)`, `(3^4) - 5.67`, `89 / ((10*11)/121.3)`
 ### Constants
 `pi/2`, `e^3`
 <details><summary>List of available constants</summary>
@@ -26,7 +26,7 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 * `max_value` - the largest finite value that can be used in calculations
 * `min_value` - the smallest positive value that can be used in calculations
 * `euler` - Euler's (Euler-Mascheroni) constant
-* `phi` - the golden ratio value
+* `phi` - the golden ratio
 * `ln2` - natural logarithm of 2
 * `ln10` - natural logarithm of 10
 * `log2e` - base 2 logarithm of E
@@ -58,15 +58,18 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 * `log1p(a)` - natural logarithm of `a+1`
 * `ceil(a)` - smallest value that is greater than or equal to `a` and is equal to a mathematical integer
 * `floor(a)` - largest value that is less than or equal to `a` and is equal to a mathematical integer
+* `trunc(a)` - `a` with the fractional part removed, leaving the integer part
 * `round(a)` - closest value to `a`, with ties rounding to positive infinity
-* `rint(a)` - value that is closest to `a` and is equal to a mathematical integer
+* `rint(a)` - value that is closest to `a` and is equal to a mathematical integer; for `.5` values rounds to closest even number
 * `format_float(a)` - round to the first two decimal places (shortcut for `round(a*100)/100`); very inaccurate for some numbers
 * `pow(a,b)` - `a` raised to the power of `b` (same as `a^b`)
 * `sqrt(a)` - positive square root of `a`
 * `cbrt(a)` - cube root of `a`
 * `root(a,b)` - `b` root of `a` (shortcut for `pow(a,1/b)`)
-* `hypot(a,b)` - hypotenuse of `a` and `b` without intermediate overflow or underflow (`sqrt(a^2+b^2)`)
-* `raw_hypot(a,b)` - hypotenuse of `a` and `b` with no square root operation (shortcut for `a^2+b^2`)
+* `hypot` - hypotenuse
+  * `hypot(a,b)` - hypotenuse of `a` and `b` without intermediate overflow or underflow (`sqrt(a^2+b^2)`)
+  * `hypot(a,b,c...)` - hypotenuse of lengths  (shortcut for `sqrt(a^2+b^2+c^2...)`)
+* `raw_hypot(a,b...)` - hypotenuse of lengths with no square root operation (shortcut for `a^2+b^2...`)
 * `exp(a)` - E raised to the power of `a`
 * `expm1(a)` - E raised to the power of `a`, minus `1`
 * `to_degrees(a)` - angle measured in radians to approximately equivalent angle measured in degrees
@@ -80,7 +83,7 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 * `ieee_remainder(a,b)` - remainder operation `%` on two arguments as prescribed by the IEEE 754 standard
 * `copy_sign(a,b)` - `a` with the sign of `b`
 * `fma(a,b,c)` - exact product of `a*b+c` rounded once
-* `scalb` - `a*2^round(b)` rounded as if performed by a single correctly rounded floating-point multiply
+* `scalb(a,b)` - `a*2^round(b)` rounded as if performed by a single correctly rounded floating-point multiply
 * `random` - random number generator
   * `random(a)` - random number `0 >= x < a`
   * `random(a,b)` - random number `a >= x < b`
@@ -100,6 +103,6 @@ Add dependency (version might be outdated, see the top)
 <dependency>
     <groupId>com.github.imDaniX</groupId>
     <artifactId>EzMath</artifactId>
-    <version>v3.12</version>
+    <version>v3.13</version>
 </dependency>
 ```

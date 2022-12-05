@@ -12,7 +12,6 @@ import static me.imdanix.math.MathDictionary.*;
  */
 public class FormulaEvaluator {
     private static final Term ZERO = (vars) -> 0;
-    private static final Double ZERO_VALUE = 0d;
 
     private final MathDictionary math;
     private final Term term;
@@ -125,7 +124,10 @@ public class FormulaEvaluator {
             } else {
                 Double cons = math.getConstant(str);
                 if (cons == null) {
-                    x = (vars) -> vars.getOrDefault(str, ZERO_VALUE);
+                    x = (vars) -> {
+                        Double value = vars.get(str);
+                        return value == null ? 0 : value;
+                    };
                 } else {
                     double consValue = cons;
                     x = (vars) -> consValue;

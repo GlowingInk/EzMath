@@ -73,7 +73,7 @@ public class MathDictionary {
     }
 
     private static <T> void tryRegister(String what, Map<String, T> in, Map<String, T> out) {
-        if (out == null) return;
+        if (out == null || out.isEmpty()) return;
         for (Map.Entry<String, T> entry : out.entrySet()) {
             String name = entry.getKey();
             Matcher matcher = NAME_PATTERN.matcher(name);
@@ -119,8 +119,6 @@ public class MathDictionary {
 
     @FunctionalInterface
     public interface Function {
-        Function SELF = a -> a;
-
         /**
          * Calculate result of function for desired numbers
          * @param a the first input number of function
@@ -168,6 +166,7 @@ public class MathDictionary {
         CEIL(a -> Math.ceil(a)),
         FLOOR(a -> Math.floor(a)),
         ROUND(a -> Math.round(a)), // TODO Round to specific place, replace FORMAT_FLOAT
+        RINT(a -> Math.rint(a)),
         SQRT(a -> Math.sqrt(a)),
         CBRT(a -> Math.cbrt(a)),
         EXP(a -> Math.exp(a)),
@@ -177,9 +176,9 @@ public class MathDictionary {
         GET_EXPONENT(a -> Math.getExponent(a)),
         NEXT_DOWN(a -> Math.nextDown(a)),
         NEXT_UP(a -> Math.nextUp(a)),
-        RINT(a -> Math.rint(a)),
         SIGNUM(a -> Math.signum(a)),
         ULP(a -> Math.ulp(a)),
+        TRUNC(a -> a > 0 ? Math.floor(a) : Math.ceil(a)),
         FORMAT_FLOAT((a) -> Math.round(a * 100D) / 100D);
 
         private final Function internal;
@@ -234,12 +233,6 @@ public class MathDictionary {
                 return Math.atan2(a, b);
             }
         },
-        HYPOT {
-            @Override
-            public double accept(double a, double b) {
-                return Math.hypot(a, b);
-            }
-        },
         NEXT_AFTER {
             @Override
             public double accept(double a, double b) {
@@ -281,6 +274,36 @@ public class MathDictionary {
                 return Math.log(a);
             }
         },
+        HYPOT {
+            @Override
+            public double accept(double a, double b) {
+                return Math.hypot(a, b);
+            }
+
+            @Override
+            public double accept(double a, double... num) {
+                a *= a;
+                for (double b : num) {
+                    a += b*b;
+                }
+                return Math.sqrt(a);
+            }
+        },
+        RAW_HYPOT {
+            @Override
+            public double accept(double a, double b) {
+                return a*a + b*b;
+            }
+
+            @Override
+            public double accept(double a, double... num) {
+                a *= a;
+                for (double b : num) {
+                    a += b*b;
+                }
+                return a;
+            }
+        },
         RANDOM {
             @Override
             public double accept(double a, double b) {
@@ -302,12 +325,6 @@ public class MathDictionary {
             @Override
             public double accept(double a, double b) {
                 return ThreadLocalRandom.current().nextBoolean() ? a : b;
-            }
-        },
-        RAW_HYPOT {
-            @Override
-            public double accept(double a, double b) {
-                return a*a + b*b;
             }
         },
         ROOT {

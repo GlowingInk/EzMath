@@ -10,7 +10,7 @@ public class MathDictionaryTest {
     @DataProvider
     public Object[][] invalidNames() {
         return new Object[][] {
-                {"Func"},
+                {"fUnc"},
                 {"1func"},
                 {"_func"},
                 {"fun c"}
@@ -19,7 +19,7 @@ public class MathDictionaryTest {
 
     @Test(dataProvider = "invalidNames", expectedExceptions = IllegalArgumentException.class)
     public void invalidNamesTest(String funct) {
-        new MathDictionary(singletonMap(funct, MathDictionary.Function.SELF), emptyMap());
+        new MathDictionary(singletonMap(funct, a -> a), emptyMap());
     }
 
     @DataProvider
@@ -33,6 +33,6 @@ public class MathDictionaryTest {
 
     @Test(dataProvider = "existingNames", expectedExceptions = IllegalStateException.class)
     public void existingNamesTest(String funct) {
-        new MathDictionary(singletonMap(funct, MathDictionary.Function.SELF), emptyMap());
+        new MathDictionary(singletonMap(funct, a -> a), emptyMap());
     }
 }
