@@ -104,11 +104,11 @@ public class MathDictionary {
         return constants.get(name);
     }
 
-    public static boolean isDigitChar(char c) {
+    public static boolean isDigit(char c) {
         return c >= '0' && c <= '9';
     }
 
-    public static boolean isWordChar(char c) {
+    public static boolean isLetter(char c) {
         return (c >= 'a' && c <= 'z') || c == '_';
     }
 

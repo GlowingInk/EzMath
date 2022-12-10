@@ -3,12 +3,12 @@ package me.imdanix.math;
 import java.util.Arrays;
 import java.util.Locale;
 
-import static me.imdanix.math.MathDictionary.isDigitChar;
-import static me.imdanix.math.MathDictionary.isWordChar;
+import static me.imdanix.math.MathDictionary.isDigit;
+import static me.imdanix.math.MathDictionary.isLetter;
 
 /**
  * Better performance for one-time calculations over {@link FormulaEvaluator}.
- * Unlike {@link FormulaEvaluator}, doesn't create additional memory garbage.
+ * Also generates much less memory garbage than {@link FormulaEvaluator}.
  */
 public class ExpressionEvaluator {
     private final String expression;
@@ -61,37 +61,44 @@ public class ExpressionEvaluator {
         if (progress('(')) {
             x = thirdImportance();
             progress(')');
-        } else if (isDigitChar(current())) {
+        } else if (isDigit(current())) {
             pointer++;
-            while (isDigitChar(current())) pointer++;
+            while (isDigit(current())) pointer++;
             if (progress('.')) {
-                while (isDigitChar(current())) pointer++;
+                while (isDigit(current())) pointer++;
                 if (progress('e')) {
                     if (!progress('-')) progress('+');
-                    while (isDigitChar(current())) pointer++;
+                    while (isDigit(current())) pointer++;
                 }
             }
             x = MathDictionary.asDouble(expression.substring(start, pointer), 0);
-        } else if (isWordChar(current())) {
+        } else if (isLetter(current())) {
             pointer++;
-            while (isWordChar(current()) || isDigitChar(current())) pointer++;
+            while (isLetter(current()) || isDigit(current())) pointer++;
             String str = expression.substring(start, pointer);
             if (progress('(')) {
                 MathDictionary.Function function = math.getFunction(str);
                 x = thirdImportance();
-                if (progress(',')) {
-                    double[] args = {thirdImportance()};
-                    while (progress(',')) {
-                        args = Arrays.copyOfRange(args, 0, args.length + 1);
-                        args[args.length - 1] = thirdImportance();
-                    }
-                    x = function == null
-                            ? 0
-                            : args.length == 1 ? function.accept(x, args[0]) : function.accept(x, args);
-                } else {
+                if (!progress(',')) {
                     x = function == null
                             ? 0
                             : function.accept(x);
+                } else {
+                    double b = thirdImportance();
+                    if (!progress(',')) {
+                        x = function == null
+                                ? 0
+                                : function.accept(x, b);
+                    } else {
+                        double[] args = {b, thirdImportance()};
+                        while (progress(',')) {
+                            args = Arrays.copyOfRange(args, 0, args.length + 1);
+                            args[args.length - 1] = thirdImportance();
+                        }
+                        x = function == null
+                                ? 0
+                                : function.accept(x, args);
+                    }
                 }
                 progress(')');
             } else {

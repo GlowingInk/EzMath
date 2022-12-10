@@ -79,36 +79,43 @@ public class FormulaEvaluator {
         if (holder.progress('(')) {
             x = thirdImportance(holder);
             holder.progress(')');
-        } else if (isDigitChar(holder.current())) {
+        } else if (isDigit(holder.current())) {
             holder.pointer++;
-            while (isDigitChar(holder.current())) holder.pointer++;
+            while (isDigit(holder.current())) holder.pointer++;
             if (holder.progress('.')) {
-                while (isDigitChar(holder.current())) holder.pointer++;
+                while (isDigit(holder.current())) holder.pointer++;
                 if (holder.progress('e')) {
                     if (!holder.progress('-')) holder.progress('+');
-                    while (isDigitChar(holder.current())) holder.pointer++;
+                    while (isDigit(holder.current())) holder.pointer++;
                 }
             }
             double a = asDouble(holder.substring(start, holder.pointer), 0);
             x = (vars) -> a;
-        } else if (isWordChar(holder.current())) {
+        } else if (isLetter(holder.current())) {
             holder.pointer++;
-            while (isWordChar(holder.current()) || isDigitChar(holder.current())) holder.pointer++;
+            while (isLetter(holder.current()) || isDigit(holder.current())) holder.pointer++;
             String str = holder.substring(start, holder.pointer);
             if (holder.progress('(')) {
                 MathDictionary.Function function = math.getFunction(str);
                 Term a = thirdImportance(holder);
-                if (holder.progress(',')) {
-                    Term[] args = {thirdImportance(holder)};
-                    while (holder.progress(',')) {
-                        args = Arrays.copyOfRange(args, 0, args.length + 1);
-                        args[args.length - 1] = thirdImportance(holder);
-                    }
+                if (!holder.progress(',')) {
                     if (function != null) {
-                        Term[] finArgs = args;
-                        if (args.length == 1) {
-                            x = (vars) -> function.accept(a.calc(vars), finArgs[0].calc(vars));
-                        } else {
+                        x = (vars) -> function.accept(a.calc(vars));
+                    }
+                } else {
+                    Term b = thirdImportance(holder);
+                    if (!holder.progress(',')) {
+                        if (function != null) {
+                            x = (vars) -> function.accept(a.calc(vars), b.calc(vars));
+                        }
+                    } else {
+                        Term[] args = {b, thirdImportance(holder)};
+                        while (holder.progress(',')) {
+                            args = Arrays.copyOfRange(args, 0, args.length + 1);
+                            args[args.length - 1] = thirdImportance(holder);
+                        }
+                        if (function != null) {
+                            Term[] finArgs = args;
                             x = (vars) -> {
                                 double[] numArgs = new double[finArgs.length];
                                 for (int i = 0; i < finArgs.length; i++)
@@ -117,8 +124,6 @@ public class FormulaEvaluator {
                             };
                         }
                     }
-                } else if (function != null) {
-                    x = (vars) -> function.accept(a.calc(vars));
                 }
                 holder.progress(')');
             } else {
