@@ -165,7 +165,7 @@ public class MathDictionary {
         LOG1P(a -> Math.log1p(a)),
         CEIL(a -> Math.ceil(a)),
         FLOOR(a -> Math.floor(a)),
-        ROUND(a -> Math.round(a)), // TODO Round to specific place, replace FORMAT_FLOAT
+        ROUND(a -> Math.round(a)),
         RINT(a -> Math.rint(a)),
         SQRT(a -> Math.sqrt(a)),
         CBRT(a -> Math.cbrt(a)),
@@ -179,7 +179,7 @@ public class MathDictionary {
         SIGNUM(a -> Math.signum(a)),
         ULP(a -> Math.ulp(a)),
         TRUNC(a -> a > 0 ? Math.floor(a) : Math.ceil(a)),
-        FORMAT_FLOAT((a) -> Math.round(a * 100D) / 100D);
+        FORMAT_FLOAT((a) -> TRUNC.internal.accept(a * 100D) / 100D);
 
         private final Function internal;
 
@@ -303,16 +303,31 @@ public class MathDictionary {
                 }
                 return a;
             }
+
+            @Override
+            public double accept(double a) {
+                return a*a;
+            }
         },
         RANDOM {
             @Override
             public double accept(double a, double b) {
-                return ThreadLocalRandom.current().nextDouble(a, b);
+                if (a < b) {
+                    return ThreadLocalRandom.current().nextDouble(a, b == Double.POSITIVE_INFINITY ? Double.MAX_VALUE : b);
+                } else {
+                    return a;
+                }
             }
 
             @Override
             public double accept(double a) {
-                return ThreadLocalRandom.current().nextDouble(a);
+                if (a > 0) {
+                    return ThreadLocalRandom.current().nextDouble(a);
+                } else if (a < 0) {
+                    return -ThreadLocalRandom.current().nextDouble(0d - a);
+                } else {
+                    return 0;
+                }
             }
         },
         RNG_CHOICE {

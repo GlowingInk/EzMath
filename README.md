@@ -61,7 +61,7 @@ Also, for performance reasons, EzMath throws no exceptions, so weird behaviour o
 * `trunc(a)` - `a` with the fractional part removed, leaving the integer part
 * `round(a)` - closest value to `a`, with ties rounding to positive infinity
 * `rint(a)` - value that is closest to `a` and is equal to a mathematical integer; for `.5` values rounds to closest even number
-* `format_float(a)` - round to the first two decimal places (shortcut for `round(a*100)/100`); very inaccurate for some numbers
+* `format_float(a)` - round to the first two decimal places (shortcut for `trunc(a*100)/100`); very inaccurate for some numbers
 * `pow(a,b)` - `a` raised to the power of `b` (same as `a^b`)
 * `sqrt(a)` - positive square root of `a`
 * `cbrt(a)` - cube root of `a`
@@ -85,8 +85,8 @@ Also, for performance reasons, EzMath throws no exceptions, so weird behaviour o
 * `fma(a,b,c)` - exact product of `a*b+c` rounded once
 * `scalb(a,b)` - `a*2^round(b)` rounded as if performed by a single correctly rounded floating-point multiply
 * `random` - random number generator
-  * `random(a)` - random number `0 >= x < a`
-  * `random(a,b)` - random number `a >= x < b`
+  * `random(a)` - random number `0 <= x < a` (or `a < x <= 0` for negative `a`)
+  * `random(a,b)` - random number `a <= x < b`
 * `rng_choice(a,b...)` - random choose between multiple numbers
 </details>
 
@@ -103,6 +103,6 @@ Add dependency (version might be outdated, see the top badge)
 <dependency>
     <groupId>com.github.imDaniX</groupId>
     <artifactId>EzMath</artifactId>
-    <version>3.14</version>
+    <version>3.15</version>
 </dependency>
 ```
