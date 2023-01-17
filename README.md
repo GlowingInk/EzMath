@@ -3,9 +3,9 @@
 Simple math evaluator. Supports constants, functions, variables.
 Evaluators code is based off Boann's answer on [StackOverflow](https://stackoverflow.com/a/26227947/9819521).
 
-It should be noted that the lib uses Java's `double` as its base number type, so it's very fast but not precise. 
-That being said, it also means that calculations are affected by the overflow, so big numbers are a no-no. 
-Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be expected. 
+It should be noted that the lib uses Java's `double` as its base number type, so it's rather fast. 
+That being said, it also means that calculations are affected by imprecision, so big numbers are a no-no. 
+Also, for performance reasons, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be expected. 
 
 ## Format
 ### Decimal numbers
@@ -13,7 +13,7 @@ Also, EzMath throws no exceptions, so weird behaviour on invalid inputs is to be
 ### Basic math operators
 `1+2`, `3-4`, `5*6`, `7/8`, `9^10`, `11%12`
 ### Grouping
-`(1+2)`, `(3^4) - 5.67`, `89 / ((10*11)/121.3)`
+`(1+2)`, `3^(4 - 5.67)`, `89 / ((10*11)/121.3)`
 ### Constants
 `pi/2`, `e^3`
 <details><summary>List of available constants</summary>
@@ -98,11 +98,11 @@ Add jitpack repository
     <url>https://jitpack.io</url>
 </repository>
 ```
-Add dependency (version might be outdated, see the top)
+Add dependency (version might be outdated, see the top badge)
 ```xml
 <dependency>
     <groupId>com.github.imDaniX</groupId>
     <artifactId>EzMath</artifactId>
-    <version>v3.14</version>
+    <version>3.14</version>
 </dependency>
 ```
