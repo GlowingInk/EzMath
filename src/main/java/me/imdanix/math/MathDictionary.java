@@ -334,7 +334,7 @@ public class MathDictionary {
             @Override
             public double accept(double a, double... num) {
                 int choice = ThreadLocalRandom.current().nextInt(num.length + 1);
-                return choice == 0 ? a : num[choice];
+                return choice == 0 ? a : num[choice - 1];
             }
 
             @Override
