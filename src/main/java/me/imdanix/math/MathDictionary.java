@@ -348,7 +348,7 @@ public class MathDictionary {
                 return Math.pow(a, 1/b);
             }
         },
-        AVERAGE {
+        AVG {
             @Override
             public double accept(double a, double... num) {
                 for (double b : num) {
@@ -360,6 +360,47 @@ public class MathDictionary {
             @Override
             public double accept(double a, double b) {
                 return (a+b) / 2;
+            }
+        },
+        LOG_GAMMA {
+            private static final double[] LANCZOS = {
+                    1.0000000001900148240,
+                    76.180091729471463483,
+                    -86.505320329416767652,
+                    24.014098240830910490,
+                    -1.2317395724501553875,
+                    0.0012086509738661785061,
+                    -5.3952393849531283785e-6
+            };
+
+            @Override
+            public double accept(double a) {
+                double tmp = (a - 0.5) * Math.log(a + 4.5) - (a + 4.5);
+                double appx = LANCZOS[0];
+                for (int i = 1; i < LANCZOS.length; i++) {
+                    appx += LANCZOS[i] / (a + i - 1);
+                }
+                return tmp + Math.log(appx * Math.sqrt(2 * Math.PI));
+            }
+        },
+        GAMMA {
+            @Override
+            public double accept(double a) {
+                if (a > 0) {
+                    if (a == 1) {
+                        return 1;
+                    } else if ((int) a == a) {
+                        double res = 1;
+                        for (int i = 2, max = (int) a - 1; i <= max; i++) {
+                            res *= i;
+                        }
+                        return res;
+                    } else {
+                        return Math.exp(LOG_GAMMA.accept(a));
+                    }
+                } else {
+                    return Double.POSITIVE_INFINITY;
+                }
             }
         };
 

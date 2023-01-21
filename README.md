@@ -39,7 +39,7 @@ Also, for performance reasons, EzMath throws no exceptions, so weird behaviour o
 
 * `max(a,b...)` - greater of specified values
 * `min(a,b...)` - smaller of specified values
-* `average(a,b...)` - average of specified values
+* `avg(a,b...)` - average of specified values
 * `cos(a)` - trigonometric cosine of an angle
 * `sin(a)` - trigonometric sine of an angle
 * `tan(a)` - trigonometric tangent of an angle
@@ -88,6 +88,8 @@ Also, for performance reasons, EzMath throws no exceptions, so weird behaviour o
   * `random(a)` - random number `0 <= x < a` (or `a < x <= 0` for negative `a`)
   * `random(a,b)` - random number `a <= x < b`
 * `rng_choice(a,b...)` - random choose between multiple numbers
+* `log_gamma(a)` - logarithm of gamma function of `a`
+* `gamma(a)` - gamma function of `a` (shortcut for `exp(log_gamma(a))`)
 </details>
 
 ## As dependency
@@ -103,6 +105,6 @@ Add dependency (version might be outdated, see the top badge)
 <dependency>
     <groupId>com.github.imDaniX</groupId>
     <artifactId>EzMath</artifactId>
-    <version>3.15</version>
+    <version>3.17</version>
 </dependency>
 ```
