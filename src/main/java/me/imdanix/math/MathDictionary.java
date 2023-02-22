@@ -31,12 +31,12 @@ public class MathDictionary {
             basicFunctions.put(func.name().toLowerCase(Locale.ROOT), func);
         }
         Map<String, Double> basicConstants = new HashMap<>(13);
-        basicConstants.put("e", Math.E);
-        basicConstants.put("pi", Math.PI);
         basicConstants.put("max_value", Double.MAX_VALUE);
         basicConstants.put("min_value", Double.MIN_VALUE);
         basicConstants.put("infinity", Double.POSITIVE_INFINITY);
         basicConstants.put("nan", Double.NaN);
+        basicConstants.put("e", Math.E);
+        basicConstants.put("pi", Math.PI);
         basicConstants.put("tau", Math.PI * 2);
         basicConstants.put("euler", 0.577215664901533);
         basicConstants.put("phi", 1.618033988749895);
@@ -364,13 +364,13 @@ public class MathDictionary {
         },
         LOG_GAMMA {
             private static final double[] LANCZOS = {
-                    1.0000000001900148240,
-                    76.180091729471463483,
-                    -86.505320329416767652,
-                    24.014098240830910490,
-                    -1.2317395724501553875,
-                    0.0012086509738661785061,
-                    -5.3952393849531283785e-6
+                    1.000000000190015,
+                    76.18009172947146,
+                    -86.50532032941676,
+                    24.01409824083091,
+                    -1.2317395724501554,
+                    0.0012086509738661786,
+                    -5.395239384953128E-6,
             };
 
             @Override
