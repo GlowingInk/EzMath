@@ -18,10 +18,10 @@ public class MathDictionary {
     private static final Pattern FLOAT = Pattern.compile("\\d+(\\.\\d+(e[+-]?\\d+)?)?");
 
     public static final Pattern NAME_PATTERN = Pattern.compile("[a-z][a-z\\d_]+");
-    public static final Map<String, Function> BASIC_FUNCTIONS;
+    public static final Map<String, MathFunction> BASIC_FUNCTIONS;
     public static final Map<String, Double> BASIC_CONSTANTS;
     static {
-        Map<String, Function> basicFunctions = new HashMap<>(
+        Map<String, MathFunction> basicFunctions = new HashMap<>(
                 SingleArgFunctions.values().length + MultiArgFunctions.values().length
         );
         for (SingleArgFunctions func : SingleArgFunctions.values()) {
@@ -51,7 +51,7 @@ public class MathDictionary {
 
     public static MathDictionary INSTANCE = new MathDictionary();
 
-    private final Map<String, Function> functions;
+    private final Map<String, MathFunction> functions;
     private final Map<String, Double> constants;
 
     private MathDictionary() {
@@ -66,7 +66,7 @@ public class MathDictionary {
      * @param functions additional functions to register
      * @param constants additional constants to register
      */
-    public MathDictionary(Map<String, Function> functions, Map<String, Double> constants) {
+    public MathDictionary(Map<String, MathFunction> functions, Map<String, Double> constants) {
         this();
         tryRegister("Function", this.functions, functions);
         tryRegister("Constant", this.constants, constants);
@@ -91,7 +91,7 @@ public class MathDictionary {
         }
     }
 
-    public Function getFunction(String name) {
+    public MathFunction getFunction(String name) {
         return functions.get(name);
     }
 
@@ -118,7 +118,7 @@ public class MathDictionary {
     }
 
     @FunctionalInterface
-    public interface Function {
+    public interface MathFunction {
         /**
          * Calculate result of function for desired numbers
          * @param a the first input number of function
@@ -181,18 +181,18 @@ public class MathDictionary {
         TRUNC(a -> a > 0 ? Math.floor(a) : Math.ceil(a)),
         FORMAT_FLOAT((a) -> TRUNC.internal.accept(a * 100D) / 100D);
 
-        private final Function internal;
+        private final MathFunction internal;
 
-        SingleArgFunctions(Function internal) {
+        SingleArgFunctions(MathFunction internal) {
             this.internal = internal;
         }
 
-        public Function getFunction() {
+        public MathFunction getFunction() {
             return internal;
         }
     }
 
-    private enum MultiArgFunctions implements Function {
+    private enum MultiArgFunctions implements MathFunction {
         MAX {
             @Override
             public double accept(double a, double... num) {

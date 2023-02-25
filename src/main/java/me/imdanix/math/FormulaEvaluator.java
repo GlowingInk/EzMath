@@ -3,6 +3,7 @@ package me.imdanix.math;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Function;
 
 import static me.imdanix.math.MathDictionary.*;
 
@@ -26,6 +27,10 @@ public class FormulaEvaluator {
     }
 
     public double eval(Map<String, Double> variables) {
+        return eval(variables::get);
+    }
+
+    public double eval(Function<String, Double> variables) {
         return term.calc(variables);
     }
 
@@ -96,7 +101,7 @@ public class FormulaEvaluator {
             while (isLetter(holder.current()) || isDigit(holder.current())) holder.pointer++;
             String str = holder.substring(start, holder.pointer);
             if (holder.progress('(')) {
-                MathDictionary.Function function = math.getFunction(str);
+                MathFunction function = math.getFunction(str);
                 Term a = thirdImportance(holder);
                 if (!holder.progress(',')) {
                     if (function != null) {
@@ -130,7 +135,7 @@ public class FormulaEvaluator {
                 Double cons = math.getConstant(str);
                 if (cons == null) {
                     x = (vars) -> {
-                        Double value = vars.get(str);
+                        Double value = vars.apply(str);
                         return value == null ? 0 : value;
                     };
                 } else {
@@ -150,7 +155,7 @@ public class FormulaEvaluator {
 
     @FunctionalInterface
     private interface Term {
-        double calc(Map<String, Double> vars);
+        double calc(Function<String, Double> vars);
     }
 
     /**

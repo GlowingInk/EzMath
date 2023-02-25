@@ -3,8 +3,7 @@ package me.imdanix.math;
 import java.util.Arrays;
 import java.util.Locale;
 
-import static me.imdanix.math.MathDictionary.isDigit;
-import static me.imdanix.math.MathDictionary.isLetter;
+import static me.imdanix.math.MathDictionary.*;
 
 /**
  * Better performance for one-time calculations over {@link FormulaEvaluator}.
@@ -77,7 +76,7 @@ public class ExpressionEvaluator {
             while (isLetter(current()) || isDigit(current())) pointer++;
             String str = expression.substring(start, pointer);
             if (progress('(')) {
-                MathDictionary.Function function = math.getFunction(str);
+                MathFunction function = math.getFunction(str);
                 x = thirdImportance();
                 if (!progress(',')) {
                     x = function == null
