@@ -1,11 +1,11 @@
-package me.imdanix.math;
+package ink.glowing.math;
 
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 
-import static me.imdanix.math.MathDictionary.*;
+import static ink.glowing.math.MathDictionary.*;
 
 /**
  * Better performance for repeating calculations over {@link ExpressionEvaluator}.

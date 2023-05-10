@@ -1,9 +1,9 @@
-package me.imdanix.math;
+package ink.glowing.math;
 
 import java.util.Arrays;
 import java.util.Locale;
 
-import static me.imdanix.math.MathDictionary.*;
+import static ink.glowing.math.MathDictionary.*;
 
 /**
  * Better performance for one-time calculations over {@link FormulaEvaluator}.

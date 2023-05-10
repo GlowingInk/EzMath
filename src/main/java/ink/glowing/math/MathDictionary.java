@@ -1,4 +1,4 @@
-package me.imdanix.math;
+package ink.glowing.math;
 
 import java.util.Collections;
 import java.util.HashMap;
