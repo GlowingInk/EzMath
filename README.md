@@ -1,4 +1,4 @@
-# EzMath ![Latest Version](https://img.shields.io/github/v/tag/imDaniX/EzMath.svg?sort=semver&label=release)
+# EzMath ![Latest Version](https://img.shields.io/github/v/tag/GlowingInk/EzMath?sort=semver&style=flat&label=release)
 
 Simple math evaluator. Supports constants, functions, variables.
 Evaluators code is based off Boann's answer on [StackOverflow](https://stackoverflow.com/a/26227947/9819521).
