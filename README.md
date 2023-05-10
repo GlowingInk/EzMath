@@ -1,4 +1,4 @@
-# EzMath ![Latest Version](https://img.shields.io/github/v/tag/GlowingInk/EzMath?sort=semver&style=flat&label=release)
+# EzMath
 
 Simple math evaluator. Supports constants, functions, variables.
 Evaluators code is based off Boann's answer on [StackOverflow](https://stackoverflow.com/a/26227947/9819521).
@@ -92,19 +92,41 @@ Also, for performance reasons, EzMath throws no exceptions, so weird behaviour o
 * `gamma(a)` - gamma function of `a` (shortcut for `exp(log_gamma(a))`)
 </details>
 
-## As dependency
-Add jitpack repository
+## Get it ![Latest Version](https://img.shields.io/github/v/tag/GlowingInk/EzMath?sort=semver&style=flat&label=release)
+Versions in dependency sections may be outdated. Check the badge above for the latest one.
+### Maven
+Add to repositories
 ```xml
 <repository>
-    <id>jitpack.io</id>
-    <url>https://jitpack.io</url>
+    <id>glowing-ink</id>
+    <url>https://repo.glowing.ink/releases</url>
 </repository>
 ```
-Add dependency (version might be outdated, see the top badge)
+Or for latest snapshots
+```xml
+<repository>
+    <id>glowing-ink</id>
+    <url>http://repo.glowing.ink/snapshots</url>
+</repository>
+```
+Add to dependencies
 ```xml
 <dependency>
-    <groupId>com.github.imDaniX</groupId>
-    <artifactId>EzMath</artifactId>
-    <version>3.17</version>
+    <groupId>ink.glowing</groupId>
+    <artifactId>ezmath</artifactId>
+    <version>3.21</version>
 </dependency>
+```
+### Gradle
+```kotlin
+repositories {
+    maven {
+        url = uri("https://repo.glowing.ink/releases")
+        // url = uri("https://repo.glowing.ink/snapshots")
+    }
+}
+
+dependencies {
+    implementation("ink.glowing:ezmath:3.21")
+}
 ```
